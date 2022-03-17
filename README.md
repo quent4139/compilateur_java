@@ -1,64 +1,29 @@
-# Projet Génie Logiciel, Ensimag.
-gl37, 01/01/2022.
+# Projet compilateur langage dérivé Java.
 
-- [page chamilo](https://chamilo.grenoble-inp.fr/courses/ENSIMAG4MMPGL6/)
-- [poly du projet](https://chamilo.grenoble-inp.fr/courses/ENSIMAG4MMPGL6/document/resources/poly/poly-projet-GL.pdf)
+## Travail réalisé en équipe de 5 
 
-## [Date importante](https://chamilo.grenoble-inp.fr/courses/ENSIMAG4MMPGL6/document/resources/slides/01-stage-intro-trans.pdf#Navigation31)
-
-### Déroulement
-- Suivis:
-  - 3 séances de 30 min
-  - pris en compte dans la note
-
-__Lundi 17 janvier 2022 à 12h__
-- Rendu intermédiaire
-  - compilateur déca sans objet
-  - pris en compte dans la note
-
-__Lundi 24 janvier 2022 à 16h__
-- Récupérations des projets : programmes et tests du compilateur et de l’extension
-
-__Mardi 25 janvier 2022__
-- Rétrospective collective
-
-__Jeudi 27-28 janvier 2022__
-- Soutenance
-
-### Documentation à prendre
-
-__Lundi 24 janvier 2022 à 20h__
-- Documentation utilisateur
-  - Description du compilateur du point de vue de l’utilisateur
-  - Commandes et options
-  - Messages d'erreurs
-  - Limitations
-  - utilisation de l'extension
-
-__Mercredi 26 janvier 2022 à 9h00__
-- Bilan
-  - Bilan collectif sur la gestion d’équipe et de projet
+### Compilation et option de compilation
+La compilation d’un programme deca se fait via la commande decac dans le terminal suivi du chemin vers le fichier du programme deca. Pour l’exécuter de cette manière on doit cependant avoir initialisé le PATH, soit au préalable, soit directement dans les PATH dans notre fichier .bash.rc (ou .zsh.rc selon le système unix).
+il y'a quelques différences avec le compilateur de l’énoncé, le notre permet d’imprimer des booléens notamment (true, false ou résultats d’opérations booléennes), certaines options n’ont pas pu être intégrées à temps (-n, -P, instanceof, ...).
 
 
+### Présentation de la commande et ses options 
+La commande decac peut-être appelé seule, elle va alors afficher toutes les options de compilations énumérées ci-dessous :
 
-__le jour de la soutenance__
-- Documentation de conception (environ 10 à 15 pages)
-  - La conception architecturale des étapes B et C
-  - Les algorithmes et structures de données spécifiques
+decac [[-p | -v] [-n] [-r X] <fichier deca>...] | [-b]
+  
+-p (parse) arrête decac après l’étape de construction de l’arbre, et
+affiche la décompilation de ce dernier (i.e. s’il n’y a qu’un fichier source à compiler, la sortie doit etre un programme deca syntaxiquement correct).
+  
+-v (verification) arrete decac après l’étape de vérifications
+(ne produit aucune sortie en l’absence d’erreur).
+  
+-n (no check) supprime les tests à l’exécution spécifiés dans les points 11.1 et 11.3 de la sémantique de deca.
 
-__le jour de la soutenance__
-- Documentation de validation (environ 10 à 15 pages)
-  - Descriptif des tests
-  - Scripts de tests
-  - Gestion des risques et gestion des rendus
-  - Couverture des tests (résultats de Jacoco)
-  - Méthodes de validation autres que le test
+-d (debug) active les traces de debug. Répéter l’option plusieurs fois pour avoir plus de traces.
+  
+-P (parallel) s’il y a plusieurs fichiers sources,
+lance la compilation des fichiers en parallèle (pour accélérer la compilation)
+  
+  On remarque notamment que les options -p et -v sont incompatibles.
 
-__le jour de la soutenance__
-- Documentation de l’extension (20 à 30 pages)
-  - Moyens mis en œuvre pour évaluer la consommation énergétique de
-votre projet
-  - Discussion sur vos choix de génération de code
-  - Discussion sur vos choix de processus de validation
-  - Prise en compte de l’impact énergétique de votre extension
-  - Toute autre analyse pertinente est également bienvenue
