@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>This.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">This.java</span></div><h1>This.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import java.io.PrintStream;
+import org.apache.commons.lang.Validate;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.ImmediateFloat;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+
+import org.apache.log4j.Logger;
+
+public class This extends AbstractExpr {
+<span class="fc" id="L24">    private static final Logger LOG = Logger.getLogger(This.class);</span>
+
+    private boolean value;
+
+<span class="fc" id="L28">    public This(boolean value){</span>
+<span class="fc" id="L29">        Validate.notNull(value);</span>
+<span class="fc" id="L30">        this.value = value;</span>
+<span class="fc" id="L31">    }</span>
+
+    public boolean getValue(){
+<span class="nc" id="L34">        return this.value;</span>
+    }
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass) throws ContextualError {
+<span class="fc" id="L40">        LOG.debug(&quot;verify Expr This: begin&quot;);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (currentClass != null) {</span>
+<span class="fc" id="L42">        Type this_type = currentClass.getType();</span>
+<span class="fc" id="L43">        this.setType(this_type);</span>
+<span class="fc" id="L44">        LOG.debug(&quot;verify Expr This: end&quot;);</span>
+<span class="fc" id="L45">        return this_type;</span>
+        }
+        else {
+<span class="fc" id="L48">            throw new ContextualError(&quot;This cannot be elsewhere than in a class method (rule 3.43) &quot;, getLocation());</span>
+        }
+    }
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if(!this.getValue()){</span>
+<span class="nc" id="L55">            s.print(&quot;this&quot;);</span>
+        }
+        else{
+<span class="nc" id="L58">            s.print(' ');</span>
+        }
+<span class="nc" id="L60">    }</span>
+
+    @Override
+    public boolean isThis(){
+<span class="fc" id="L64">        return true;//pour savoir si c'est this</span>
+    }
+    
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L70">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L75">    }</span>
+
+    @Override
+    String prettyPrintNode() {
+<span class="fc" id="L79">        return &quot;This&quot;;</span>
+    }
+    
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="fc" id="L84">        GPRegister r2 = Main.rmanager.getR2();</span>
+<span class="fc" id="L85">        Register lb = Main.rmanager.getLB();</span>
+<span class="fc" id="L86">        RegisterOffset this_heap = new RegisterOffset(-2, lb);</span>
+<span class="fc" id="L87">        compiler.addInstruction(new LOAD(this_heap, r2));</span>
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L89">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

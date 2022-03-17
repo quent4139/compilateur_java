@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractOpCmp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">AbstractOpCmp.java</span></div><h1>AbstractOpCmp.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.ImmediateString;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.ima.pseudocode.instructions.WSTR;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.BRA;
+import fr.ensimag.ima.pseudocode.Label;
+
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+public abstract class AbstractOpCmp extends AbstractBinaryExpr {
+
+<span class="fc" id="L32">    private static final Logger LOG = Logger.getLogger(AbstractOpCmp.class);</span>
+
+    public AbstractOpCmp(AbstractExpr leftOperand, AbstractExpr rightOperand) {
+<span class="fc" id="L35">        super(leftOperand, rightOperand);</span>
+<span class="fc" id="L36">    }</span>
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass) throws ContextualError {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L42">        LOG.debug(&quot;Verify AbstractopCmp: start&quot;);</span>
+<span class="fc" id="L43">        Type type1 = this.getLeftOperand().verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L44">        Type type2 = this.getRightOperand().verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L45">        String op_name = this.getOperatorName();</span>
+<span class="fc" id="L46">        Symbol bool_symb = compiler.getSymbol(&quot;boolean&quot;);</span>
+<span class="fc" id="L47">        Definition bool_definition = compiler.getDefinition(bool_symb);</span>
+
+<span class="fc bfc" id="L49" title="All 8 branches covered.">        if((type1.isInt() &amp;&amp; type2.isInt()) || (type1.isFloat() &amp;&amp; type2.isFloat())){</span>
+<span class="fc" id="L50">            this.setType(bool_definition.getType());</span>
+<span class="fc" id="L51">            LOG.debug(&quot;Verify AbstractopCmp: start&quot;);</span>
+<span class="fc" id="L52">            return bool_definition.getType();</span>
+        }
+        //conversion implicite
+<span class="fc bfc" id="L55" title="All 4 branches covered.">        else if(type1.isInt() &amp;&amp; type2.isFloat()){</span>
+<span class="fc" id="L56">            AbstractExpr new_left_op = new ConvFloat(this.getLeftOperand());</span>
+<span class="fc" id="L57">            Type new_type1 = new_left_op.verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L58">            this.setLeftOperand(new_left_op);</span>
+<span class="fc" id="L59">            this.setType(bool_definition.getType());</span>
+<span class="fc" id="L60">            LOG.debug(&quot;Verify AbstractopCmp: start&quot;);</span>
+<span class="fc" id="L61">            return bool_definition.getType();</span>
+        }
+<span class="fc bfc" id="L63" title="All 4 branches covered.">        else if(type1.isFloat() &amp;&amp; type2.isInt()){</span>
+<span class="fc" id="L64">            AbstractExpr new_right_op = new ConvFloat(this.getRightOperand());</span>
+<span class="fc" id="L65">            Type new_type2 = new_right_op.verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L66">            this.setRightOperand(new_right_op);</span>
+<span class="fc" id="L67">            this.setType(bool_definition.getType());</span>
+<span class="fc" id="L68">            LOG.debug(&quot;Verify AbstractopCmp: start&quot;);</span>
+<span class="fc" id="L69">            return bool_definition.getType();</span>
+        }
+        else{
+<span class="fc" id="L72">            String error_msg = &quot;Erreur contextuelle : impossible de comparer &quot;+type1.toString()+&quot; à un &quot;+type2.toString();</span>
+<span class="fc" id="L73">            throw new ContextualError(error_msg, this.getLocation());</span>
+        }
+    }
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L79">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="fc" id="L80">        GPRegister r3 = Main.rmanager.getRegister();</span>
+<span class="fc" id="L81">        this.getLeftOperand().codeGenInst(compiler);</span>
+<span class="fc" id="L82">        compiler.addInstruction(new LOAD(r2, r3));</span>
+<span class="fc" id="L83">        this.getRightOperand().codeGenInst(compiler);</span>
+<span class="fc" id="L84">        compiler.addInstruction(new CMP(r2, r3));</span>
+<span class="fc" id="L85">        Main.rmanager.freeRegister(r3);</span>
+<span class="fc" id="L86">    }</span>
+
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+<span class="nc" id="L90">        Main.num_print_bool ++;</span>
+<span class="nc" id="L91">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="nc" id="L92">        Label print_true = new Label(&quot;print_true&quot; + String.valueOf(Main.num_print_bool));</span>
+<span class="nc" id="L93">        Label print_false = new Label(&quot;print_false&quot;+ String.valueOf(Main.num_print_bool));</span>
+<span class="nc" id="L94">        Label end_print = new Label(&quot;end_print&quot;+ String.valueOf(Main.num_print_bool));</span>
+<span class="nc" id="L95">        this.codeGenInst(compiler);</span>
+<span class="nc" id="L96">        compiler.addInstruction(new CMP(new ImmediateInteger(1), r2));</span>
+<span class="nc" id="L97">        compiler.addInstruction(new BEQ(print_true));</span>
+<span class="nc" id="L98">        compiler.addInstruction(new BRA(print_false));</span>
+
+<span class="nc" id="L100">        compiler.addLabel(print_true);</span>
+<span class="nc" id="L101">        compiler.addInstruction(new WSTR(new ImmediateString(&quot;true&quot;)));</span>
+<span class="nc" id="L102">        compiler.addInstruction(new BRA(end_print));</span>
+
+<span class="nc" id="L104">        compiler.addLabel(print_false);</span>
+<span class="nc" id="L105">        compiler.addInstruction(new WSTR(new ImmediateString(&quot;false&quot;)));</span>
+<span class="nc" id="L106">        compiler.addInstruction(new BRA(end_print));</span>
+
+<span class="nc" id="L108">        compiler.addLabel(end_print);</span>
+<span class="nc" id="L109">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

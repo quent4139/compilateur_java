@@ -1,0 +1,15 @@
+// Description:
+//    Soulève l'erreur (1.3)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : Identifier 'B' non déclaré (règle 1.3)
+//
+// Historique:
+//      cree le 06/01/2022
+
+
+class A extends B {
+}
+
+

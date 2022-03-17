@@ -1,0 +1,13 @@
+// Description:
+//    return ne peut pas exister sans méthode
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 :  type indéfini
+//
+// Historique:
+//      cree le 06/01/2022
+
+{
+    return 3;
+}

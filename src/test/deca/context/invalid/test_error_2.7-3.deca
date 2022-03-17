@@ -1,0 +1,24 @@
+// Description:
+//    Soulève l'erreur (2.7)
+//
+// Resultat:
+//    Erreur contextuelle
+//    Ligne 19 : La signature de la méthode getX est différente de la superclasse (règle 2.7)
+//
+// Historique:
+//      cree le 19/01/2022
+
+
+class A {
+    int getX(){
+        return 4;
+    }
+}
+
+class B extends A {
+    int getX(int i){
+        return i;
+    }
+}
+
+

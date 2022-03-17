@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MethodTable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.codegen</a> &gt; <span class="el_source">MethodTable.java</span></div><h1>MethodTable.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.codegen;
+
+import fr.ensimag.deca.DecacCompiler;
+import java.util.ArrayList;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.context.MethodDefinition;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.DAddr;
+import fr.ensimag.deca.context.ClassType;
+import fr.ensimag.deca.tree.Main;
+
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.NullOperand;
+import fr.ensimag.ima.pseudocode.LabelOperand;
+import fr.ensimag.ima.pseudocode.instructions.BOV;
+import fr.ensimag.ima.pseudocode.instructions.TSTO;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
+
+public class MethodTable{
+
+    private DAddr addr_super_class;
+    private DAddr addr_class; //adresse de la table des méthodes de la classe
+    private ClassDefinition class_def;
+    private ArrayList&lt;Label&gt; label_list;
+    private ArrayList&lt;MethodDefinition&gt; method_list;
+    private ArrayList&lt;DAddr&gt; addr_list;
+
+<span class="fc" id="L31">    public MethodTable(ClassDefinition class_def){</span>
+<span class="fc" id="L32">        this.class_def = class_def;</span>
+<span class="fc" id="L33">        DAddr addr = Main.rmanager.getStackMemory();</span>
+<span class="fc" id="L34">        this.addr_class = addr;</span>
+<span class="fc" id="L35">        this.label_list = new ArrayList&lt;Label&gt;();</span>
+<span class="fc" id="L36">        this.method_list = new ArrayList&lt;MethodDefinition&gt;();</span>
+<span class="fc" id="L37">        this.addr_list = new ArrayList&lt;DAddr&gt;();</span>
+<span class="fc" id="L38">    }</span>
+    public void addMethod(MethodDefinition method_def, Label label, DAddr addr){
+<span class="fc" id="L40">        label_list.add(label);</span>
+<span class="fc" id="L41">        method_list.add(method_def);</span>
+<span class="fc" id="L42">        addr_list.add(addr);</span>
+<span class="fc" id="L43">    }</span>
+
+    public ClassDefinition getClassDefinition(){
+<span class="fc" id="L46">        return this.class_def;</span>
+    }
+
+    public DAddr getAddr(){
+<span class="fc" id="L50">        return this.addr_class;</span>
+    }
+
+    public DAddr getSuperAddr(){
+<span class="nc" id="L54">        return this.addr_super_class;</span>
+    }
+
+    public void setSuperAddr(DAddr super_addr){
+<span class="fc" id="L58">        this.addr_super_class = super_addr;</span>
+<span class="fc" id="L59">    }</span>
+    public void addSuperTable(MethodTable superTable){
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        for(int i = 0; i &lt; superTable.method_list.size(); i++){</span>
+<span class="fc" id="L62">            DAddr addr_method = Main.rmanager.getStackMemory();</span>
+<span class="fc" id="L63">            Label label_super = superTable.label_list.get(i);</span>
+<span class="fc" id="L64">            MethodDefinition def_method_super = superTable.method_list.get(i);</span>
+<span class="fc" id="L65">            this.addMethod(def_method_super, label_super, addr_method);</span>
+        }
+<span class="fc" id="L67">    }</span>
+
+    public DAddr getAddrMethod(MethodDefinition method_def){
+<span class="fc" id="L70">        int index = this.method_list.indexOf(method_def);</span>
+<span class="fc" id="L71">        return this.addr_list.get(index);</span>
+    }
+
+    public void codeGenTable(DecacCompiler compiler){
+<span class="fc" id="L75">        int n = this.label_list.size();</span>
+<span class="fc" id="L76">        GPRegister r0 = Main.rmanager.getR0();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if(addr_super_class != null){</span>
+<span class="fc" id="L78">            ClassType type = class_def.getType();</span>
+<span class="fc" id="L79">            String name = type.getName().getName();</span>
+<span class="fc" id="L80">            compiler.addComment(&quot;Code de la table des méthodes de &quot; + name);</span>
+<span class="fc" id="L81">            compiler.addInstruction(new LEA(this.addr_super_class, r0));</span>
+<span class="fc" id="L82">            compiler.addInstruction(new STORE(r0, this.addr_class));</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            for(int i  = 0; i &lt; n; i++){</span>
+<span class="fc" id="L84">                Label label_method = this.label_list.get(i);</span>
+<span class="fc" id="L85">                compiler.addInstruction(new LOAD(new LabelOperand(label_method), r0));</span>
+<span class="fc" id="L86">                DAddr addr_method  = this.addr_list.get(i);</span>
+<span class="fc" id="L87">                compiler.addInstruction(new STORE(r0, addr_method));</span>
+            }
+<span class="fc" id="L89">        }</span>
+        else{
+<span class="fc" id="L91">            compiler.addComment(&quot;Code de la table des méthodes de Object&quot;);</span>
+<span class="fc" id="L92">            compiler.addInstruction(new LOAD(new NullOperand(), r0));</span>
+<span class="fc" id="L93">            compiler.addInstruction(new STORE(r0, this.addr_class));</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            for(int i  = 0; i &lt; n; i++){</span>
+<span class="fc" id="L95">                Label label_method = this.label_list.get(i);</span>
+<span class="fc" id="L96">                compiler.addInstruction(new LOAD(new LabelOperand(label_method), r0));</span>
+<span class="fc" id="L97">                DAddr addr_method  = this.addr_list.get(i);</span>
+<span class="fc" id="L98">                compiler.addInstruction(new STORE(r0, addr_method));</span>
+            }
+        }
+<span class="fc" id="L101">    }</span>
+
+    public int getLength(){
+<span class="fc" id="L104">        int i = label_list.size();</span>
+<span class="fc" id="L105">        return i;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

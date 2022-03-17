@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>While.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">While.java</span></div><h1>While.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.Label;
+import java.io.PrintStream;
+import org.apache.commons.lang.Validate;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
+import fr.ensimag.ima.pseudocode.instructions.BRA;
+import fr.ensimag.ima.pseudocode.instructions.BNE;
+import fr.ensimag.ima.pseudocode.Label;
+
+/**
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class While extends AbstractInst {
+    private AbstractExpr condition;
+    private ListInst body;
+
+    public AbstractExpr getCondition() {
+<span class="fc" id="L33">        return condition;</span>
+    }
+
+    public ListInst getBody() {
+<span class="fc" id="L37">        return body;</span>
+    }
+
+<span class="fc" id="L40">    public While(AbstractExpr condition, ListInst body) {</span>
+<span class="fc" id="L41">        Validate.notNull(condition);</span>
+<span class="fc" id="L42">        Validate.notNull(body);</span>
+<span class="fc" id="L43">        this.condition = condition;</span>
+<span class="fc" id="L44">        this.body = body;</span>
+<span class="fc" id="L45">    }</span>
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="fc" id="L49">        Main.num_while ++; // marche pour un while dans le main, il faudra surement changer ça quand on fera avec objet</span>
+<span class="fc" id="L50">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="fc" id="L51">        Label while_label = new Label(&quot;while&quot; + String.valueOf(Main.num_while));</span>
+<span class="fc" id="L52">        Label end_while = new Label(&quot;end_while&quot; + String.valueOf(Main.num_while));</span>
+
+        //while
+<span class="fc" id="L55">        compiler.addLabel(while_label);</span>
+<span class="fc" id="L56">        this.condition.codeGenInst(compiler);</span>
+<span class="fc" id="L57">        compiler.addInstruction(new CMP(new ImmediateInteger(1), r2));</span>
+<span class="fc" id="L58">        compiler.addInstruction(new BNE(end_while));</span>
+<span class="fc" id="L59">        this.body.codeGenListInst(compiler);</span>
+<span class="fc" id="L60">        compiler.addInstruction(new BRA(while_label));</span>
+
+        //end_while
+<span class="fc" id="L63">        compiler.addLabel(end_while);</span>
+
+<span class="fc" id="L65">    }</span>
+
+    @Override
+    protected void verifyInst(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass, Type returnType)
+            throws ContextualError {
+<span class="fc" id="L71">            this.condition.verifyCondition(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L72">            this.body.verifyListInst(compiler, localEnv, currentClass, returnType);</span>
+<span class="fc" id="L73">    }</span>
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L77">        s.print(&quot;while (&quot;);</span>
+<span class="fc" id="L78">        getCondition().decompile(s);</span>
+<span class="fc" id="L79">        s.println(&quot;) {&quot;);</span>
+<span class="fc" id="L80">        s.indent();</span>
+<span class="fc" id="L81">        getBody().decompile(s);</span>
+<span class="fc" id="L82">        s.unindent();</span>
+<span class="fc" id="L83">        s.print(&quot;}&quot;);</span>
+<span class="fc" id="L84">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+<span class="fc" id="L88">        condition.iter(f);</span>
+<span class="fc" id="L89">        body.iter(f);</span>
+<span class="fc" id="L90">    }</span>
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+<span class="fc" id="L94">        condition.prettyPrint(s, prefix, false);</span>
+<span class="fc" id="L95">        body.prettyPrint(s, prefix, true);</span>
+<span class="fc" id="L96">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

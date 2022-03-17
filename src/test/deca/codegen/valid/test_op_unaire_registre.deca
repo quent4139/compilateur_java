@@ -1,0 +1,14 @@
+// Description:
+//	Teste les opérations unaires via des registres
+//
+// Resultats:
+//	Ne plante pas
+//
+// Historique:
+//    cree le 11/01/2022
+
+{
+    if (-(2+2+2+2)>3) {
+	print("OK cest bon");
+    }
+}

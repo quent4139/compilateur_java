@@ -1,0 +1,19 @@
+// Description:
+//   test des entiers
+//
+// Resultats:
+//  Creation de deux variables et addition
+//
+// Historique:
+//    crée le 14/01/2022
+
+
+   
+{  
+
+   int a = 1;
+   int b = 5; 
+    
+   a = a + 4;
+   b = a + b;
+}

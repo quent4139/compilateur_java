@@ -1,0 +1,13 @@
+// Description:
+//    Soulève l'erreur (3.35)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : 'int' et 'float' ne sont pas compatibles pour l'affectation (règle 3.35)
+//
+// Historique:
+//      cree le 06/01/2022
+
+{
+	int i = 1.0;
+}

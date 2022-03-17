@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>New.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">New.java</span></div><h1>New.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import java.io.PrintStream;
+import org.apache.commons.lang.Validate;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.ImmediateFloat;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.DAddr;
+import fr.ensimag.ima.pseudocode.LabelOperand;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.NEW;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
+import fr.ensimag.ima.pseudocode.instructions.LEA;
+import fr.ensimag.ima.pseudocode.instructions.BSR;
+import fr.ensimag.ima.pseudocode.instructions.PUSH;
+import fr.ensimag.ima.pseudocode.instructions.POP;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.instructions.TSTO;
+import fr.ensimag.ima.pseudocode.instructions.BOV;
+import fr.ensimag.ima.pseudocode.Label;
+public class New extends AbstractExpr{
+
+    private AbstractIdentifier className;
+
+<span class="fc" id="L37">    public New (AbstractIdentifier className){</span>
+<span class="fc" id="L38">        Validate.notNull(className);</span>
+<span class="fc" id="L39">        this.className = className;</span>
+<span class="fc" id="L40">    }</span>
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass) throws ContextualError {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;)
+<span class="fc" id="L46">        Definition def_new = compiler.getDefinition(className.getName());</span>
+<span class="fc" id="L47">        this.className.setDefinition(def_new);</span>
+<span class="fc" id="L48">        Type new_type = def_new.getType();</span>
+<span class="fc" id="L49">        this.setType(new_type);</span>
+<span class="fc" id="L50">        return new_type;</span>
+    }
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L55">        s.print(&quot;New &quot;);</span>
+<span class="fc" id="L56">        className.decompile(s);</span>
+<span class="fc" id="L57">    }</span>
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+<span class="fc" id="L61">        className.prettyPrint(s, prefix, true);</span>
+<span class="fc" id="L62">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+<span class="fc" id="L66">        className.iter(f);</span>
+<span class="fc" id="L67">    }</span>
+    
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="fc" id="L71">        ClassDefinition class_def = className.getClassDefinition();</span>
+<span class="fc" id="L72">        Register r0 = Main.rmanager.getR0();</span>
+<span class="fc" id="L73">        Register r2 = Main.rmanager.getR2();</span>
+<span class="fc" id="L74">        Register r3 = Main.rmanager.getRegister();</span>
+<span class="fc" id="L75">        DAddr addr_class = ListDeclClass.list_m_table.getMethodTable(class_def).getAddr(); // à compléter, rajouter une var globale avec mmethodTable</span>
+<span class="fc" id="L76">        RegisterOffset r3_0 = new RegisterOffset(0, r3);</span>
+<span class="fc" id="L77">        int d = class_def.getMembers().getNumberField() + 1; //taille dans le tas</span>
+<span class="fc" id="L78">        compiler.addInstruction(new NEW(new ImmediateInteger(d), (GPRegister)r3));</span>
+<span class="fc" id="L79">        compiler.addInstruction(new LEA(addr_class, (GPRegister)r0));</span>
+<span class="fc" id="L80">        compiler.addInstruction(new STORE(r0, r3_0));</span>
+
+<span class="fc" id="L82">        compiler.addInstruction(new TSTO(3));</span>
+<span class="fc" id="L83">        compiler.addInstruction(new BOV(new Label(&quot;pile_pleine&quot;)));</span>
+<span class="fc" id="L84">        compiler.addInstruction(new PUSH((GPRegister)r3));//pas sur</span>
+<span class="fc" id="L85">        Label init_label = new Label(&quot;init.&quot; + className.getName().getName());</span>
+<span class="fc" id="L86">        compiler.addInstruction(new BSR(new LabelOperand(init_label)));</span>
+<span class="fc" id="L87">        compiler.addInstruction(new POP((GPRegister)r3));// pas sur</span>
+<span class="fc" id="L88">        compiler.addInstruction(new LOAD(r3, (GPRegister)r2));</span>
+<span class="fc" id="L89">        Main.rmanager.freeRegister((GPRegister)r3);</span>
+<span class="fc" id="L90">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

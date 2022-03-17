@@ -1,0 +1,50 @@
+// Description:
+//    Utilisation de l'implémentation des classes
+//
+// Resultats:
+//    Doit fonctionner correctement
+//
+// Historique:
+//    cree le 23/01/2022
+
+
+class Animal {
+    float poids;
+    void crie() {
+	println("...");
+    }
+}
+
+
+class Pangolin extends Animal {
+    int poids = 80;
+    void crie() {
+	println("Gwwark Rhââgn Bwwikk");
+    }
+}
+
+
+class Chat extends Animal {
+    float poids = 5.345;
+    void crie() {
+	println("Meow..");
+    }
+}
+
+
+{
+    Animal animal1 = new Pangolin();
+    Animal animal2 = new Chat();
+
+    animal1.crie();
+    println("Poids : ", animal1.poids ,"kg");
+    //cast<Animal>(animal1).crie();
+    // println("Poids : ", cast<Pangolin>(animal1).poids ,"kg");
+    
+    animal2.crie();
+   // cast<Pangolin>(animal2).crie();
+   // println("Poids : ",cast<Chat>(animal2).poids ,"kg");
+
+}
+
+

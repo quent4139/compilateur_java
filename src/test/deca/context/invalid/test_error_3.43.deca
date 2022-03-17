@@ -1,0 +1,13 @@
+// Description:
+//    Soulève l'erreur (3.43)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : "this" ne peut pas être utilisé dans un programme principal (règle 3.43)
+//
+// Historique:
+//      cree le 06/01/2022
+
+{
+    this;
+}

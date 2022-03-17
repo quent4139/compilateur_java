@@ -1,0 +1,16 @@
+// Description:
+//    Soulève l'erreur (3.63)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : 'boolean' n'est pas compatible avec l'opérateur unaire '!' (règle 3.63)
+//
+// Historique:
+//      cree le 06/01/2022
+
+/*
+{
+	boolean b;
+    b = !true;
+}
+*/

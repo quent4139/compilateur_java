@@ -1,0 +1,12 @@
+// Description:
+//   test une expression vide
+//
+// Resultats:
+//    Syntaxiquement correct 
+//
+// Historique:
+//    cree le 16/01/2022
+
+{
+       print();
+}

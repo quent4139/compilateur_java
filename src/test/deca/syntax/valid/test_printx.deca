@@ -1,0 +1,13 @@
+// Description:
+//    Programme minimaliste utilisant printx.
+//
+// Resultats:
+//    Affichage de la chaine de caractères 1234 en hexa.
+//
+// Historique:
+//    cree le 10/01/2022
+
+
+{
+        printx(1234);
+}

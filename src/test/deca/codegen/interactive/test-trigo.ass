@@ -1,0 +1,1541 @@
+; start main program
+; Code gen init table
+	TSTO #16
+	BOV pile_pleine
+	ADDSP #16
+; Début génération de la table des méthodes
+; Code de la table des méthodes de Object
+	LOAD #null, R0
+	STORE R0, 1(GB)
+	LOAD code.Object.equals, R0
+	STORE R0, 2(GB)
+; Code de la table des méthodes de Math
+	LEA 1(GB), R0
+	STORE R0, 3(GB)
+	LOAD code.Object.equals, R0
+	STORE R0, 4(GB)
+	LOAD code.Math._abs, R0
+	STORE R0, 5(GB)
+	LOAD code.Math._factoriel, R0
+	STORE R0, 6(GB)
+	LOAD code.Math._sqrt, R0
+	STORE R0, 7(GB)
+	LOAD code.Math._tab, R0
+	STORE R0, 8(GB)
+	LOAD code.Math.sin, R0
+	STORE R0, 9(GB)
+	LOAD code.Math.cos, R0
+	STORE R0, 10(GB)
+	LOAD code.Math.puiss, R0
+	STORE R0, 11(GB)
+	LOAD code.Math.plusProchePuiss, R0
+	STORE R0, 12(GB)
+	LOAD code.Math.ulp, R0
+	STORE R0, 13(GB)
+	LOAD code.Math.atan, R0
+	STORE R0, 14(GB)
+	LOAD code.Math.acos, R0
+	STORE R0, 15(GB)
+	LOAD code.Math.asin, R0
+	STORE R0, 16(GB)
+; Fin génération de la table des méthodes
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+	TSTO #6
+	BOV pile_pleine
+	ADDSP #6
+	LOAD #0, R2
+	STORE R2, 17(GB)
+	LOAD #0x1.0c6f7ap-20, R2
+	STORE R2, 18(GB)
+	LOAD #10, R2
+	FLOAT R2, R2
+	STORE R2, 19(GB)
+	NEW #3, R3
+	LEA 3(GB), R0
+	STORE R0, 0(R3)
+	TSTO #3
+	BOV pile_pleine
+	PUSH R3
+	BSR init.Math
+	POP R3
+	LOAD R3, R2
+	STORE R2, 22(GB)
+; Beginning of instructions:
+while1:
+	LOAD 17(GB), R2
+	LOAD R2, R3
+	LOAD #100, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BNE end_while1
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD 22(GB), R3
+	STORE R3, 0(SP)
+	LOAD 18(GB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 14(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 20(GB)
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD 22(GB), R3
+	STORE R3, 0(SP)
+	LOAD #1, R2
+	FLOAT R2, R2
+	LOAD R2, R4
+	LOAD 18(GB), R2
+	CMP R2, R4
+	DIV R2, R4
+	BOV divideOV1
+	BRA end_divide1
+divideOV1:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[12, 17]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide1:
+	LOAD R4, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 14(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 21(GB)
+	WSTR "atan("
+	LOAD 18(GB), R2
+	LOAD R2, R1
+	WFLOAT
+	WSTR ") + atan("
+	LOAD #0x1.0p0, R2
+	LOAD R2, R3
+	LOAD 18(GB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV2
+	BRA end_divide2
+divideOV2:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[13, 36]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide2:
+	LOAD R3, R2
+	LOAD R2, R1
+	WFLOAT
+	WSTR ") = "
+	LOAD 20(GB), R2
+	LOAD R2, R3
+	LOAD 21(GB), R2
+	ADD R3, R2
+	LOAD R2, R1
+	WFLOAT
+	WSTR "    "
+	LOAD 17(GB), R2
+	LOAD R2, R5
+	LOAD #1, R2
+	ADD R5, R2
+	LOAD R2, R4
+	LOAD #3, R2
+	CMP R2, R4
+	REM R2, R4
+	BOV divideOV3
+	BRA end_divide3
+divideOV3:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[14, 5]:Erreur arithmetique : modulo par 0 impossible"
+	WNL
+	HALT
+end_divide3:
+	LOAD R4, R2
+	LOAD R2, R3
+	LOAD #0, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label1
+	BRA else_label1
+then_label1:
+	WSTR ""
+	WNL
+	BRA end_if1
+else_label1:
+	BRA end_if1
+end_if1:
+	LOAD 18(GB), R2
+	LOAD R2, R3
+	LOAD 19(GB), R2
+	ADD R3, R2
+	STORE R2, 18(GB)
+	LOAD 17(GB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	ADD R3, R2
+	STORE R2, 17(GB)
+	BRA while1
+end_while1:
+	HALT
+; ------------Initialisation des classes-----------------
+; Initialisation des Champs de fr.ensimag.deca.tree.Identifier
+init.Math:
+; Initialistaion de _pi
+	LOAD #0x1.921fb4p1, R2
+	LOAD R2, R0
+	LOAD -2(LB), R1
+	STORE R0, 1(R1)
+; Initialistaion de _pi2
+	LOAD #0x1.704428p-28, R2
+	LOAD R2, R0
+	LOAD -2(LB), R1
+	STORE R0, 2(R1)
+	RTS
+; -------------Codage des méthodes------------------------
+code.Object.equals:
+	RTS
+; Code des méthodes de la classe Math
+code.Math._abs:
+	ADDSP #1
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x0.0p0, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label2
+	BRA else_label2
+then_label2:
+	LOAD #0x1.0p0, R2
+	LOAD R2, R4
+	ADD R2, R4
+	SUB R4, R2
+	LOAD R2, R3
+	LOAD -3(LB), R2
+	MUL R3, R2
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	BRA end_if2
+else_label2:
+	BRA end_if2
+end_if2:
+	LOAD -3(LB), R2
+	LOAD R2, R0
+	SUBSP #1
+	RTS
+code.Math._factoriel:
+	LOAD #1, R2
+	STORE R2, 1(LB)
+	LOAD -3(LB), R2
+	STORE R2, 2(LB)
+	ADDSP #2
+while2:
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD #0, R2
+	CMP R2, R3
+	SNE R2
+	CMP #1, R2
+	BNE end_while2
+	LOAD 1(LB), R2
+	LOAD R2, R3
+	LOAD 2(LB), R2
+	MUL R3, R2
+	STORE R2, 1(LB)
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, 2(LB)
+	BRA while2
+end_while2:
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	SUBSP #2
+	RTS
+code.Math._sqrt:
+	LOAD -3(LB), R2
+	STORE R2, 1(LB)
+	LOAD #0, R2
+	FLOAT R2, R2
+	STORE R2, 2(LB)
+	ADDSP #2
+while3:
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD 1(LB), R2
+	CMP R2, R3
+	SNE R2
+	CMP #1, R2
+	BNE end_while3
+	LOAD 1(LB), R2
+	STORE R2, 2(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R5
+	LOAD 1(LB), R2
+	CMP R2, R5
+	DIV R2, R5
+	BOV divideOV4
+	BRA end_divide4
+divideOV4:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[45, 19]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide4:
+	LOAD R5, R2
+	LOAD R2, R4
+	LOAD 1(LB), R2
+	ADD R4, R2
+	LOAD R2, R3
+	LOAD #2, R2
+	FLOAT R2, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV5
+	BRA end_divide5
+divideOV5:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[45, 28]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide5:
+	LOAD R3, R2
+	STORE R2, 1(LB)
+	BRA while3
+end_while3:
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	SUBSP #2
+	RTS
+code.Math._tab:
+	ADDSP #0
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label3
+	BRA else_label3
+then_label3:
+	LOAD #0x1.921fb6p-1, R2
+	LOAD R2, R0
+	BRA end_if3
+else_label3:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label4
+	BRA else_label4
+then_label4:
+	LOAD #0x1.983e28p-4, R2
+	LOAD R2, R0
+	BRA end_if4
+else_label4:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #2, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label5
+	BRA else_label5
+then_label5:
+	LOAD #0x1.47ab4ap-7, R2
+	LOAD R2, R0
+	BRA end_if5
+else_label5:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #3, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label6
+	BRA else_label6
+then_label6:
+	LOAD #0x1.0624dep-10, R2
+	LOAD R2, R0
+	BRA end_if6
+else_label6:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #4, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label7
+	BRA else_label7
+then_label7:
+	LOAD #0x1.a36e2ep-14, R2
+	LOAD R2, R0
+	BRA end_if7
+else_label7:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #5, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label8
+	BRA else_label8
+then_label8:
+	LOAD #0x1.4f8b58p-17, R2
+	LOAD R2, R0
+	BRA end_if8
+else_label8:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #6, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label9
+	BRA else_label9
+then_label9:
+	LOAD #0x1.0c6f7ap-20, R2
+	LOAD R2, R0
+	BRA end_if9
+else_label9:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #7, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label10
+	BRA else_label10
+then_label10:
+	LOAD #0x1.ad7f2ap-24, R2
+	LOAD R2, R0
+	BRA end_if10
+else_label10:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #8, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label11
+	BRA else_label11
+then_label11:
+	LOAD #0x1.5798eep-27, R2
+	LOAD R2, R0
+	BRA end_if11
+else_label11:
+	LOAD #0x0.0p0, R2
+	LOAD R2, R0
+	BRA end_if11
+end_if11:
+	BRA end_if10
+end_if10:
+	BRA end_if9
+end_if9:
+	BRA end_if8
+end_if8:
+	BRA end_if7
+end_if7:
+	BRA end_if6
+end_if6:
+	BRA end_if5
+end_if5:
+	BRA end_if4
+end_if4:
+	BRA end_if3
+end_if3:
+	SUBSP #0
+	RTS
+code.Math.sin:
+	LOAD #0x1.0p0, R2
+	STORE R2, 2(LB)
+	LOAD #0x0.0p0, R2
+	STORE R2, 3(LB)
+	LOAD #0x1.0p0, R2
+	STORE R2, 4(LB)
+	LOAD #0x1.0p0, R2
+	STORE R2, 6(LB)
+	LOAD #0x1.0p0, R2
+	STORE R2, 7(LB)
+	LOAD #0, R2
+	STORE R2, 10(LB)
+	ADDSP #10
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x0.0p0, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label12
+	BRA else_label12
+then_label12:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	ADD R2, R3
+	SUB R3, R2
+	STORE R2, -3(LB)
+	BRA end_if12
+else_label12:
+	BRA end_if12
+end_if12:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	CMP R2, R3
+	SGT R2
+	CMP #1, R2
+	BEQ then_label13
+	BRA else_label13
+then_label13:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	LOAD R2, R4
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	MUL R4, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV6
+	BRA end_divide6
+divideOV6:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[90, 19]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide6:
+	LOAD R3, R2
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	INT R2, R2
+	STORE R2, 9(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	LOAD R2, R6
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	MUL R6, R2
+	LOAD R2, R5
+	LOAD 9(LB), R2
+	FLOAT R2, R2
+	MUL R5, R2
+	LOAD R2, R4
+	LOAD #0x1.0p1, R2
+	LOAD R2, R6
+	LOAD -2(LB), R2
+	LOAD 2(R2), R2
+	MUL R6, R2
+	LOAD R2, R5
+	LOAD 9(LB), R2
+	FLOAT R2, R2
+	MUL R5, R2
+	ADD R4, R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, -3(LB)
+	BRA end_if13
+else_label13:
+	BRA end_if13
+end_if13:
+while4:
+	LOAD 10(LB), R2
+	LOAD R2, R3
+	LOAD #8, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BNE end_while4
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD 10(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 8(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 8(LB)
+while5:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD 8(LB), R2
+	CMP R2, R3
+	SGE R2
+	CMP #1, R2
+	BNE end_while5
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD 3(LB), R2
+	LOAD R2, R4
+	LOAD 6(LB), R2
+	CMP R2, R4
+	DIV R2, R4
+	BOV divideOV7
+	BRA end_divide7
+divideOV7:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[97, 20]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide7:
+	LOAD R4, R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, 5(LB)
+	LOAD 3(LB), R2
+	LOAD R2, R3
+	LOAD 2(LB), R2
+	LOAD R2, R4
+	LOAD 6(LB), R2
+	CMP R2, R4
+	DIV R2, R4
+	BOV divideOV8
+	BRA end_divide8
+divideOV8:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[98, 20]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide8:
+	LOAD R4, R2
+	ADD R3, R2
+	STORE R2, 3(LB)
+	LOAD 5(LB), R2
+	STORE R2, 2(LB)
+	LOAD 4(LB), R2
+	LOAD R2, R3
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R4
+	STORE R4, 0(SP)
+	LOAD #0x1.0p0, R2
+	LOAD R2, R5
+	LOAD 7(LB), R2
+	ADD R5, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R4
+	LOAD 0(R4), R4
+	BSR 7(GB)
+	LOAD R0, R2
+	SUBSP #2
+	MUL R3, R2
+	STORE R2, 4(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD 8(LB), R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, -3(LB)
+	BRA while5
+end_while5:
+	LOAD 10(LB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	ADD R3, R2
+	STORE R2, 10(LB)
+	LOAD 6(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.4p3, R2
+	MUL R3, R2
+	STORE R2, 6(LB)
+	LOAD 7(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.9p6, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV9
+	BRA end_divide9
+divideOV9:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[105, 15]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide9:
+	LOAD R3, R2
+	STORE R2, 7(LB)
+	BRA while4
+end_while4:
+	LOAD 3(LB), R2
+	LOAD R2, R3
+	LOAD 4(LB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV10
+	BRA end_divide10
+divideOV10:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[107, 16]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide10:
+	LOAD R3, R2
+	LOAD R2, R0
+	SUBSP #10
+	RTS
+code.Math.cos:
+	LOAD #0x1.0p0, R2
+	STORE R2, 2(LB)
+	LOAD #0x0.0p0, R2
+	STORE R2, 3(LB)
+	LOAD #0x1.0p0, R2
+	STORE R2, 4(LB)
+	LOAD #0x1.0p0, R2
+	STORE R2, 6(LB)
+	LOAD #0x1.0p0, R2
+	STORE R2, 7(LB)
+	LOAD #0, R2
+	STORE R2, 10(LB)
+	ADDSP #10
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x0.0p0, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label14
+	BRA else_label14
+then_label14:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	ADD R2, R3
+	SUB R3, R2
+	STORE R2, -3(LB)
+	BRA end_if14
+else_label14:
+	BRA end_if14
+end_if14:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	CMP R2, R3
+	SGT R2
+	CMP #1, R2
+	BEQ then_label15
+	BRA else_label15
+then_label15:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	LOAD R2, R4
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	MUL R4, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV11
+	BRA end_divide11
+divideOV11:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[122, 19]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide11:
+	LOAD R3, R2
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	INT R2, R2
+	STORE R2, 9(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	LOAD R2, R6
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	MUL R6, R2
+	LOAD R2, R5
+	LOAD 9(LB), R2
+	FLOAT R2, R2
+	MUL R5, R2
+	LOAD R2, R4
+	LOAD #0x1.0p1, R2
+	LOAD R2, R6
+	LOAD -2(LB), R2
+	LOAD 2(R2), R2
+	MUL R6, R2
+	LOAD R2, R5
+	LOAD 9(LB), R2
+	FLOAT R2, R2
+	MUL R5, R2
+	ADD R4, R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, -3(LB)
+	BRA end_if15
+else_label15:
+	BRA end_if15
+end_if15:
+while6:
+	LOAD 10(LB), R2
+	LOAD R2, R3
+	LOAD #8, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BNE end_while6
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD 10(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 8(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 8(LB)
+while7:
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD 8(LB), R2
+	CMP R2, R3
+	SGE R2
+	CMP #1, R2
+	BNE end_while7
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD 3(LB), R2
+	LOAD R2, R4
+	LOAD 6(LB), R2
+	CMP R2, R4
+	DIV R2, R4
+	BOV divideOV12
+	BRA end_divide12
+divideOV12:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[129, 20]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide12:
+	LOAD R4, R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, 5(LB)
+	LOAD 3(LB), R2
+	LOAD R2, R3
+	LOAD 2(LB), R2
+	LOAD R2, R4
+	LOAD 6(LB), R2
+	CMP R2, R4
+	DIV R2, R4
+	BOV divideOV13
+	BRA end_divide13
+divideOV13:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[130, 20]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide13:
+	LOAD R4, R2
+	ADD R3, R2
+	STORE R2, 3(LB)
+	LOAD 5(LB), R2
+	STORE R2, 2(LB)
+	LOAD 4(LB), R2
+	LOAD R2, R3
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R4
+	STORE R4, 0(SP)
+	LOAD #0x1.0p0, R2
+	LOAD R2, R5
+	LOAD 7(LB), R2
+	ADD R5, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R4
+	LOAD 0(R4), R4
+	BSR 7(GB)
+	LOAD R0, R2
+	SUBSP #2
+	MUL R3, R2
+	STORE R2, 4(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD 8(LB), R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, -3(LB)
+	BRA while7
+end_while7:
+	LOAD 10(LB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	ADD R3, R2
+	STORE R2, 10(LB)
+	LOAD 6(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.4p3, R2
+	MUL R3, R2
+	STORE R2, 6(LB)
+	LOAD 7(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.9p6, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV14
+	BRA end_divide14
+divideOV14:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[137, 15]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide14:
+	LOAD R3, R2
+	STORE R2, 7(LB)
+	BRA while6
+end_while6:
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD 4(LB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV15
+	BRA end_divide15
+divideOV15:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[139, 16]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide15:
+	LOAD R3, R2
+	LOAD R2, R0
+	SUBSP #10
+	RTS
+code.Math.puiss:
+	LOAD #1, R2
+	FLOAT R2, R2
+	STORE R2, 1(LB)
+	LOAD #0, R2
+	STORE R2, 2(LB)
+	ADDSP #4
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD -4(LB), R2
+	FLOAT R2, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 5(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 4(LB)
+	LOAD 4(LB), R2
+	INT R2, R2
+	STORE R2, 3(LB)
+while8:
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD 3(LB), R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BNE end_while8
+	LOAD -3(LB), R2
+	FLOAT R2, R2
+	LOAD R2, R3
+	LOAD 1(LB), R2
+	MUL R3, R2
+	STORE R2, 1(LB)
+	LOAD 2(LB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	ADD R3, R2
+	STORE R2, 2(LB)
+	BRA while8
+end_while8:
+	LOAD -4(LB), R2
+	LOAD R2, R3
+	LOAD #0, R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label16
+	BRA else_label16
+then_label16:
+	LOAD #1, R2
+	FLOAT R2, R2
+	LOAD R2, R3
+	LOAD 1(LB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV16
+	BRA end_divide16
+divideOV16:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[154, 20]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide16:
+	LOAD R3, R2
+	LOAD R2, R0
+	BRA end_if16
+else_label16:
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	BRA end_if16
+end_if16:
+	SUBSP #4
+	RTS
+code.Math.plusProchePuiss:
+	LOAD #126, R2
+	LOAD R2, R3
+	ADD R2, R3
+	SUB R3, R2
+	STORE R2, 1(LB)
+	LOAD #127, R2
+	STORE R2, 2(LB)
+	LOAD #1, R2
+	STORE R2, 3(LB)
+	ADDSP #8
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD -3(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 5(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 5(LB)
+	TSTO #3
+	BOV pile_pleine
+	ADDSP #3
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #2, R2
+	STORE R2, -1(SP)
+	LOAD #126, R2
+	LOAD R2, R4
+	ADD R2, R4
+	SUB R4, R2
+	STORE R2, -2(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 11(GB)
+	LOAD R0, R2
+	SUBSP #3
+	STORE R2, 7(LB)
+	TSTO #3
+	BOV pile_pleine
+	ADDSP #3
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #2, R2
+	STORE R2, -1(SP)
+	LOAD #127, R2
+	STORE R2, -2(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 11(GB)
+	LOAD R0, R2
+	SUBSP #3
+	STORE R2, 8(LB)
+	LOAD 5(LB), R2
+	LOAD R2, R3
+	LOAD 7(LB), R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label17
+	BRA else_label17
+then_label17:
+	LOAD #126, R2
+	LOAD R2, R3
+	ADD R2, R3
+	SUB R3, R2
+	LOAD R2, R0
+	BRA end_if17
+else_label17:
+	LOAD 5(LB), R2
+	LOAD R2, R3
+	LOAD 8(LB), R2
+	CMP R2, R3
+	SGT R2
+	CMP #1, R2
+	BEQ then_label18
+	BRA else_label18
+then_label18:
+	LOAD #127, R2
+	LOAD R2, R0
+	BRA end_if18
+else_label18:
+while9:
+	LOAD 2(LB), R2
+	LOAD R2, R4
+	LOAD 1(LB), R2
+	SUB R2, R4
+	LOAD R4, R2
+	LOAD R2, R3
+	LOAD #1, R2
+	CMP R2, R3
+	SGT R2
+	CMP #1, R2
+	BNE end_while9
+	LOAD 2(LB), R2
+	LOAD R2, R4
+	LOAD 1(LB), R2
+	ADD R4, R2
+	LOAD R2, R3
+	LOAD #2, R2
+	CMP R2, R3
+	QUO R2, R3
+	BOV divideOV17
+	BRA end_divide17
+divideOV17:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[179, 35]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide17:
+	LOAD R3, R2
+	STORE R2, 3(LB)
+	TSTO #3
+	BOV pile_pleine
+	ADDSP #3
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #2, R2
+	STORE R2, -1(SP)
+	LOAD 3(LB), R2
+	STORE R2, -2(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 11(GB)
+	LOAD R0, R2
+	SUBSP #3
+	STORE R2, 6(LB)
+	LOAD 5(LB), R2
+	LOAD R2, R3
+	LOAD 6(LB), R2
+	CMP R2, R3
+	SGT R2
+	CMP #1, R2
+	BEQ then_label19
+	BRA else_label19
+then_label19:
+	LOAD 3(LB), R2
+	STORE R2, 1(LB)
+	BRA end_if19
+else_label19:
+	LOAD 5(LB), R2
+	LOAD R2, R3
+	LOAD 6(LB), R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label20
+	BRA else_label20
+then_label20:
+	LOAD 3(LB), R2
+	STORE R2, 2(LB)
+	BRA end_if20
+else_label20:
+	LOAD 3(LB), R2
+	LOAD R2, R0
+	BRA end_if20
+end_if20:
+	BRA end_if19
+end_if19:
+	BRA while9
+end_while9:
+	LOAD 1(LB), R2
+	STORE R2, 4(LB)
+	LOAD 4(LB), R2
+	LOAD R2, R0
+	BRA end_if18
+end_if18:
+	BRA end_if17
+end_if17:
+	SUBSP #8
+	RTS
+code.Math.ulp:
+	ADDSP #2
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD #0, R2
+	FLOAT R2, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label21
+	BRA else_label21
+then_label21:
+	LOAD #0x0.000002p-126, R2
+	LOAD R2, R0
+	BRA end_if21
+else_label21:
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R4
+	STORE R4, 0(SP)
+	LOAD -3(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R4
+	LOAD 0(R4), R4
+	BSR 12(GB)
+	LOAD R0, R2
+	SUBSP #2
+	LOAD R2, R3
+	LOAD #23, R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, 2(LB)
+	TSTO #3
+	BOV pile_pleine
+	ADDSP #3
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #2, R2
+	STORE R2, -1(SP)
+	LOAD 2(LB), R2
+	STORE R2, -2(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 11(GB)
+	LOAD R0, R2
+	SUBSP #3
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	BRA end_if21
+end_if21:
+	SUBSP #2
+	RTS
+code.Math.atan:
+	ADDSP #6
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #1, R2
+	FLOAT R2, R2
+	LOAD R2, R4
+	LOAD -3(LB), R2
+	LOAD R2, R5
+	LOAD -3(LB), R2
+	MUL R5, R2
+	ADD R4, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 7(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 4(LB)
+	LOAD #0x1.0p0, R2
+	LOAD R2, R3
+	LOAD 4(LB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV18
+	BRA end_divide18
+divideOV18:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[224, 14]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide18:
+	LOAD R3, R2
+	STORE R2, 2(LB)
+	LOAD #1, R2
+	FLOAT R2, R2
+	STORE R2, 3(LB)
+	LOAD #1, R2
+	STORE R2, 6(LB)
+while10:
+	LOAD 6(LB), R2
+	LOAD R2, R3
+	LOAD #11, R2
+	CMP R2, R3
+	SLE R2
+	CMP #1, R2
+	BNE end_while10
+	LOAD 2(LB), R2
+	LOAD R2, R4
+	LOAD 3(LB), R2
+	ADD R4, R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV19
+	BRA end_divide19
+divideOV19:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[228, 20]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide19:
+	LOAD R3, R2
+	STORE R2, 2(LB)
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD 2(LB), R2
+	LOAD R2, R4
+	LOAD 3(LB), R2
+	MUL R4, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 7(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 3(LB)
+	LOAD 6(LB), R2
+	LOAD R2, R3
+	LOAD #1, R2
+	ADD R3, R2
+	STORE R2, 6(LB)
+	BRA while10
+end_while10:
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R4
+	STORE R4, 0(SP)
+	LOAD #1, R2
+	FLOAT R2, R2
+	LOAD R2, R5
+	LOAD -3(LB), R2
+	LOAD R2, R6
+	LOAD -3(LB), R2
+	MUL R6, R2
+	ADD R5, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R4
+	LOAD 0(R4), R4
+	BSR 7(GB)
+	LOAD R0, R2
+	SUBSP #2
+	LOAD R2, R3
+	LOAD 2(LB), R2
+	MUL R3, R2
+	STORE R2, 5(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R3
+	LOAD 5(LB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV20
+	BRA end_divide20
+divideOV20:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[233, 15]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide20:
+	LOAD R3, R2
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	SUBSP #6
+	RTS
+code.Math.acos:
+	ADDSP #4
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD -3(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 5(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 3(LB)
+	LOAD 3(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.0p0, R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label22
+	BRA else_label22
+then_label22:
+	LOAD #0x1.0p0, R2
+	LOAD R2, R5
+	LOAD -3(LB), R2
+	SUB R2, R5
+	LOAD R5, R2
+	LOAD R2, R4
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	MUL R4, R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV21
+	BRA end_divide21
+divideOV21:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[251, 31]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide21:
+	LOAD R3, R2
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	BRA end_if22
+else_label22:
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #0x1.0p0, R2
+	LOAD R2, R4
+	LOAD -3(LB), R2
+	LOAD R2, R5
+	LOAD -3(LB), R2
+	MUL R5, R2
+	SUB R2, R4
+	LOAD R4, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 7(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 2(LB)
+	LOAD -3(LB), R2
+	LOAD R2, R4
+	ADD R2, R4
+	SUB R4, R2
+	LOAD R2, R3
+	LOAD 2(LB), R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV22
+	BRA end_divide22
+divideOV22:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[256, 26]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide22:
+	LOAD R3, R2
+	STORE R2, 2(LB)
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD 2(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 14(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 1(LB)
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD #0x1.0p0, R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 14(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 4(LB)
+	LOAD 4(LB), R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	MUL R3, R2
+	STORE R2, 4(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R3
+	LOAD 4(LB), R2
+	ADD R3, R2
+	STORE R2, 1(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R0
+	BRA end_if22
+end_if22:
+	SUBSP #4
+	RTS
+code.Math.asin:
+	ADDSP #3
+	LOAD -2(LB), R2
+	LOAD 1(R2), R2
+	LOAD R2, R4
+	LOAD -2(LB), R2
+	LOAD 2(R2), R2
+	ADD R4, R2
+	LOAD R2, R3
+	LOAD #0x1.0p1, R2
+	CMP R2, R3
+	DIV R2, R3
+	BOV divideOV23
+	BRA end_divide23
+divideOV23:
+	WSTR "/Users/thomas/Documents/ensimag/projet-GL/gl37/src/test/deca/codegen/interactive/test-trigo.deca:[271, 31]:Erreur arithmetique : division par 0 impossible"
+	WNL
+	HALT
+end_divide23:
+	LOAD R3, R2
+	STORE R2, 1(LB)
+	TSTO #2
+	BOV pile_pleine
+	ADDSP #2
+	LOAD -2(LB), R2
+	LOAD R2, R3
+	STORE R3, 0(SP)
+	LOAD -3(LB), R2
+	STORE R2, -1(SP)
+	LOAD 0(SP), R3
+	LOAD 0(R3), R3
+	BSR 15(GB)
+	LOAD R0, R2
+	SUBSP #2
+	STORE R2, 2(LB)
+	LOAD 1(LB), R2
+	LOAD R2, R3
+	LOAD 2(LB), R2
+	SUB R2, R3
+	LOAD R3, R2
+	STORE R2, 3(LB)
+	LOAD 3(LB), R2
+	LOAD R2, R0
+	SUBSP #3
+	RTS
+pile_pleine:
+	WSTR "Erreur : dépassement de pile"
+	WNL
+	ERROR
+; end main program

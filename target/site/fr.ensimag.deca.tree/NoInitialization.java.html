@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NoInitialization.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">NoInitialization.java</span></div><h1>NoInitialization.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.deca.context.VariableDefinition;
+import fr.ensimag.deca.context.FieldDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import java.io.PrintStream;
+import fr.ensimag.ima.pseudocode.DAddr;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.ImmediateFloat;
+
+/**
+ * Absence of initialization (e.g. &quot;int x;&quot; as opposed to &quot;int x =
+ * 42;&quot;).
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+<span class="fc" id="L26">public class NoInitialization extends AbstractInitialization {</span>
+
+    @Override
+    protected void verifyInitialization(DecacCompiler compiler, Type t,
+            EnvironmentExp localEnv, ClassDefinition currentClass)
+            throws ContextualError {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (t.isVoid()){</span>
+<span class="nc" id="L34">            throw new ContextualError(&quot;Erreur contextuelle à &quot; + compiler.getSource().getAbsolutePath() + &quot;:&quot; +</span>
+<span class="nc" id="L35">                    this.getLocation().getLine() + &quot;: impossible de créer une instance de void&quot;, this.getLocation());</span>
+        }
+<span class="fc" id="L37">    }</span>
+
+
+    /**
+     * Node contains no real information, nothing to check.
+     */
+    @Override
+    protected void checkLocation() {
+        // nothing
+<span class="fc" id="L46">    }</span>
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+        // nothing
+<span class="fc" id="L51">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L56">    }</span>
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L61">    }</span>
+    @Override
+    public void codeGenInitialization(DecacCompiler compiler, Definition def, boolean inMethod){
+<span class="fc" id="L64">        GPRegister r2 = Main.rmanager.getR2();</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if(def.isField()){</span>
+            // à compléter
+<span class="fc" id="L67">            Type t = ((FieldDefinition)def).getType();</span>
+<span class="pc bpc" id="L68" title="1 of 4 branches missed.">            if(t.isInt() || t.isBoolean()){</span>
+<span class="fc" id="L69">                compiler.addInstruction(new LOAD(new ImmediateInteger(0), r2));</span>
+            }
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">            else if(t.isFloat()){</span>
+<span class="fc" id="L72">                compiler.addInstruction(new LOAD(new ImmediateFloat(0), r2));</span>
+            }
+<span class="fc" id="L74">        }</span>
+        else{
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            if(inMethod){</span>
+<span class="nc" id="L77">                DAddr stack_name  = Main.rmanager.getLBMemory();</span>
+<span class="nc" id="L78">                ((VariableDefinition)def).setOperand(stack_name);</span>
+<span class="nc" id="L79">            }</span>
+            else{
+<span class="fc" id="L81">                DAddr stack_name  = Main.rmanager.getStackMemory();</span>
+<span class="fc" id="L82">                ((VariableDefinition)def).setOperand(stack_name);</span>
+                //compiler.addInstruction(new STORE(r2, stack_name));
+            }
+        }
+<span class="fc" id="L86">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

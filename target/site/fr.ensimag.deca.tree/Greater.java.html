@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Greater.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">Greater.java</span></div><h1>Greater.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.SGT;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+
+/**
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class Greater extends AbstractOpIneq {
+
+    public Greater(AbstractExpr leftOperand, AbstractExpr rightOperand) {
+<span class="fc" id="L18">        super(leftOperand, rightOperand);</span>
+<span class="fc" id="L19">    }</span>
+
+
+    @Override
+    protected String getOperatorName() {
+<span class="fc" id="L24">        return &quot;&gt;&quot;;</span>
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="fc" id="L29">        super.codeGenInst(compiler);</span>
+<span class="fc" id="L30">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="fc" id="L31">        compiler.addInstruction(new SGT(r2));</span>
+<span class="fc" id="L32">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

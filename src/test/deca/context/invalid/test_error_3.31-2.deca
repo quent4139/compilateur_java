@@ -1,0 +1,13 @@
+// Description:
+//    Programme soulevant l'erreur (3.31)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : Entier, flottant ou chaine de caractère attendu (règle 3.31)
+//
+// Historique:
+//    cree le 12/01/2022
+
+{
+   print(null);
+}

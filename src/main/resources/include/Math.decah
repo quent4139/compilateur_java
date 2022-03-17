@@ -1,0 +1,278 @@
+// Grenoble INP - Ensimag projet GL -*- mode: java -*-
+// Library for class Math of Deca, coded in Deca
+
+class Math {
+    float _pi= 3.141592600;
+    float _pi2= 5.358979e-9;
+
+    /*
+     Retourne la valeur absolue d'une valeur.
+     Si l'argument n'est pas négatif, l'argument est retourné.
+     Si l'argument est négatif, la négation de l'argument est retournée.
+     */
+    float _abs(float val){
+        float res;
+        if (val < 0.0) {
+            res = -1.0 * val;
+            return res;
+        }
+        return val;
+    }
+
+    /*
+     Retourne le factoriel d'une valeur
+     Attention: Utiliser cette méthode avec parsimonie
+     */
+    int _factoriel(int val){
+        /*if (val <= 0) {
+            return 1;
+        }
+        return (this._factoriel(val-1) * val);*/
+        int result = 1;
+        int i = val;
+        while(i != 0){
+          result = result * i;
+          i = i -1;
+        }
+        return result;
+    }
+
+    float _sqrt(float x) {
+        float d = x;
+        float t = 0;
+        while (t != d) {
+            t = d;
+            d = (x / d + d) / 2;
+        }
+        return d;
+    }
+    //Substituer le tableau statique qui n'est pas implémenté en DECA (pour le calcul de l'atan)
+    float _tab(int i){
+        if (i==0){
+            return 0.785398163;
+        }
+        else if (i==1){
+            return 0.099668652;
+        }
+        else if (i==2){
+            return 0.009999667;
+        }
+        else if (i==3){
+            return 0.001;
+        }
+        else if (i==4){
+            return 0.0001;
+        }
+        else if (i==5){
+            return 1.0e-5;
+        }
+        else if (i==6){
+            return 1.0e-6;
+        }
+        else if (i==7){
+            return 1.0e-7;
+        }
+        else if (i==8){
+            return 1.0e-8;
+        }
+        else{
+          return 0.0;
+          }
+    }
+
+    float sin(float f) {
+        float decal, x=1.0, y=0.0, r=1.0, z, pow=1.0, s=1.0, tab_i;
+        int iDecal, i=0;
+        if (f <0.0){
+            f=-f;
+        }
+        if (f>_pi){
+            decal=f/(2.0*_pi);
+            iDecal = (int)(decal);
+            f= f-(2.0*_pi*((float)(iDecal)) + (2.0*_pi2*((float)(iDecal))));
+        }
+        while (i<8){
+            tab_i = this._tab(i);
+            while (f>= tab_i){
+                z=x-(y/(pow));
+                y=y+(x/(pow));
+                x=z;
+                r=r*this._sqrt((1.0+s));
+                f=f-tab_i;
+            }
+            i=i+1;
+            pow=pow*10.0;
+            s=s/100.0;
+        }
+        return y/r;
+    }
+
+     /*
+     Renvoie le cosinus trigonométrique d'un angle (Methode Cordic ameliore + decalage n*_pi).
+     - Le résultat calculé doit être à moins de quelques ulp du résultat exact.
+     - Les résultats doivent être semi-monotones.
+     */
+    float cos(float f) {
+        float decal, x=1.0, y=0.0, r=1.0, z, pow=1.0, s=1.0, tab_i;
+        int iDecal, i=0;
+        if (f <0.0){
+            f=-f;
+        }
+        if (f>_pi){
+            decal=f/(2.0*_pi);
+            iDecal = (int)(decal);
+            f= f-((2.0*_pi*iDecal) + (2.0*_pi2*iDecal));
+        }
+        while (i<8){
+            tab_i = this._tab(i);
+            while (f>=tab_i){
+                z=x-(y/(pow));
+                y=y+(x/(pow));
+                x=z;
+                r=r* this._sqrt(1.0+s);
+                f=f-tab_i;
+            }
+            i=i+1;
+            pow=pow*10.0;
+            s=s/100.0;
+        }
+        return x/r;
+    }
+
+    float puiss(int a, int b){
+        float pow=1;
+        int i=0;
+        int maxPow;
+        float tab_i;
+        tab_i = this._abs((float)(b));
+        maxPow = (int) (tab_i);
+        while (i<maxPow){
+            pow=a*pow;
+            i = i + 1;
+        }
+        if (b<0){
+            return 1/pow;
+        }else{
+          return pow;
+        }
+    }
+
+      int plusProchePuiss(float f){
+        int gauche=-126;
+        int droite=127;
+        int mid=1;
+        int pow;
+        float abs;
+        float puissMid;
+
+        float puiss2_126;
+        float puiss2_127;
+
+        abs = this._abs(f);
+        puiss2_126 = this.puiss(2,-126);
+        puiss2_127 = this.puiss(2,127);
+        if (abs<puiss2_126){ return -126;}
+        else if (abs>puiss2_127){return 127;}
+        else{
+
+            while (droite-gauche>1){
+                mid=(droite+gauche)/2;
+                puissMid= this.puiss(2,mid);
+                if (abs>puissMid){
+                    gauche=mid;
+                }
+                else if (abs<puissMid){
+                    droite=mid;
+                }
+                else{
+                    return mid;
+                }
+            }
+            pow=gauche;
+            return pow;
+        }
+
+    }
+
+       /*Renvoie la taille d'un ulp de l'argument.
+     ULP: L’unité de précision élémentaire sur les nombres flottants est l’intervalle entre deux flottants
+     représentables (« Unit in the last place »)
+     */
+    float ulp(float f){
+        float res;
+        int res_proch_puiss;
+        if (f==0){
+            return 1.4e-45f;
+        }
+        else{
+          res_proch_puiss = this.plusProchePuiss(f)-23;
+          res = this.puiss(2, res_proch_puiss);
+          return res;
+          }
+    }
+
+    /*
+    Renvoie l'atan trigonométrique d'un angle(Application de la moyenne arithmétique-géométrique).
+    Le résultat calculé doit être à moins de quelques ulp du résultat exact.
+    Les résultats doivent être semi-monotones .
+    */
+    float atan(float f){
+        float atg, a, b;
+        float sqrt1, sqrt2;
+        int n;
+        sqrt1 = this._sqrt(1+(f*f));
+        a= 1.0/sqrt1;
+        b=1;
+        n=1;
+        while (n<=11){
+            a= (a+b)/2.0;
+            b= this._sqrt(a*b);
+            n=n+1;
+        }
+        sqrt2 = this._sqrt(1+(f*f))*a;
+        atg = f/sqrt2;
+        return atg;
+    }
+
+      /*
+     Renvoie l'acos trigonométrique d'un angle(déduis de l'atan).
+     Cas spéciaux:
+     Le résultat calculé doit être à moins de quelques ulp du résultat exact.
+     Les résultats doivent être semi-monotones.
+     */
+    float acos(float f){
+        //assert (f<1 && f >-1);
+        float res;
+        float buff_sqrt;
+        float absf;
+        float atan1;
+        absf = this._abs(f);
+        if (absf==1.0){
+            res = ((1.0-f)*_pi)/(2.0);
+            return res;
+        }
+        else{
+          buff_sqrt = this._sqrt((1.0-(f*f)));
+          buff_sqrt = (-f)/buff_sqrt;
+          res = this.atan(buff_sqrt);  //((-f/buff_sqrt))+2*this.atan(1);
+          atan1 = this.atan(1.0);
+          atan1 = atan1*2.0;
+          res = res + atan1;
+          return res;
+          }
+    }
+
+
+  /*
+    Retourne l'arcsin de x passé en paramètre (calculé à partir de l'atan)
+    */
+    float asin(float x){
+        float res_gauche, res_droite, res;
+        res_gauche = (_pi+_pi2)/2.0;
+        res_droite = this.acos(x);
+        res = res_gauche - res_droite;
+        return res;
+    }
+}
+
+// End of Deca Math library

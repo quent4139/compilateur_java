@@ -1,0 +1,20 @@
+// Description:
+//    Soulève l'erreur (2.7)
+//
+// Resultat:
+//    Erreur contextuelle
+//    Ligne 18 : manque un argument (règle 2.7)
+//
+// Historique:
+//      cree le 19/01/2022
+
+class A {
+
+    void m(int i) {}
+}
+
+{
+    A a = new A();
+    a.m();
+}
+

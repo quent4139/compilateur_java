@@ -1,0 +1,13 @@
+// Description:
+//    tests affectation d'une variable non déclaré
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : Identificateur 'y' non déclaré (règle 0.1)
+//
+// Historique:
+//    cree le 14/01/2022
+
+{
+	int x;
+	y = x;
+}

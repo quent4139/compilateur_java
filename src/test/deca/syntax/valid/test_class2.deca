@@ -1,0 +1,27 @@
+// Description:
+//    test sur les classes donné dans l'énoncé 
+//
+// Resultats: Creation de la classe A et main syntaxiquemment correct
+//
+//
+// Historique:
+//    crée le 17/01/2021
+
+class A {
+    protected int x;
+
+    int getX(){
+        return x;
+    }  
+
+    void setX(int x){
+        this.x = x;
+    } 
+}
+
+{
+    A a = new A();
+
+    a.setX(1);
+    println("a.getX() =", a.getX());
+}

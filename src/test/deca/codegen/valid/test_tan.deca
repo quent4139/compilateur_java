@@ -1,0 +1,23 @@
+
+// Description:
+//      test tan de la bibliothèque Math 
+//
+// Resultats:
+//      tan(0.0) = 0
+//      tan(1.22) = 2.73 //approximativement
+//		tan(3.14) = 0.00 //approximativement
+//		tan(200.0) = -1.79 //approximativement 
+//
+// Historique:
+//      cree le 17/01/2022
+
+#include "Math.decah"
+{
+    Math m;
+    m = new Math();
+    println("tan(0.0) =", m.tan(0.0));
+    println("tan(1.22) =", m.tan(1.87));
+    println("tan(3.14) =", m.tan(3.14));
+    println("tan(200.0) =", m.tan(200.0));
+}
+

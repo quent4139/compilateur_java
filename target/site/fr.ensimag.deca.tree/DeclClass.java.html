@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeclClass.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">DeclClass.java</span></div><h1>DeclClass.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.ClassType;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.codegen.*;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.instructions.RTS;
+
+import java.io.PrintStream;
+import org.apache.commons.lang.Validate;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ClassType;
+import fr.ensimag.deca.context.EnvironmentType;
+import fr.ensimag.deca.context.EnvironmentExp.DoubleDefException;
+
+import org.apache.log4j.Logger;
+
+/**
+ * Declaration of a class (&lt;code&gt;class name extends superClass {members}&lt;code&gt;).
+ * 
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class DeclClass extends AbstractDeclClass {
+
+<span class="fc" id="L31">    private static final Logger LOG = Logger.getLogger(DeclClass.class);</span>
+
+    final private AbstractIdentifier className;
+    final private AbstractIdentifier classExtension;
+    final private  ListDeclField listAttribut;
+    final private ListDeclMethod listMethod;
+
+<span class="fc" id="L38">    public DeclClass(AbstractIdentifier className, AbstractIdentifier classExtension, ListDeclField listAttribut, ListDeclMethod listMethod){</span>
+<span class="fc" id="L39">        Validate.notNull(className);</span>
+<span class="fc" id="L40">        Validate.notNull(classExtension);</span>
+<span class="fc" id="L41">        Validate.notNull(listAttribut);</span>
+<span class="fc" id="L42">        Validate.notNull(listMethod);</span>
+<span class="fc" id="L43">        this.className = className;</span>
+<span class="fc" id="L44">        this.classExtension = classExtension;</span>
+<span class="fc" id="L45">        this.listAttribut = listAttribut;</span>
+<span class="fc" id="L46">        this.listMethod =listMethod;</span>
+        
+<span class="fc" id="L48">    }</span>
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L52">        s.print(&quot;class &quot;);</span>
+<span class="fc" id="L53">        className.decompile(s);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (classExtension != null) {</span>
+<span class="fc" id="L55">            s.print(&quot; extends &quot;);</span>
+<span class="fc" id="L56">            classExtension.decompile(s);</span>
+        }
+<span class="fc" id="L58">        s.println(&quot;{&quot;);</span>
+<span class="fc" id="L59">        s.indent();</span>
+<span class="fc" id="L60">        listAttribut.decompile(s);</span>
+<span class="fc" id="L61">        listMethod.decompile(s);</span>
+<span class="fc" id="L62">        s.unindent();</span>
+<span class="fc" id="L63">        s.println(&quot;}&quot;);</span>
+<span class="fc" id="L64">    }</span>
+
+    @Override
+    protected void verifyClass(DecacCompiler compiler) throws ContextualError {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L69">        LOG.debug(&quot;verify Class &quot; + className.getName() + &quot;: start&quot;);</span>
+<span class="fc" id="L70">        Symbol superclass = this.classExtension.getName();</span>
+<span class="fc" id="L71">        Definition superclass_def = compiler.getDefinition(superclass);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (superclass_def==null) {</span>
+<span class="fc" id="L73">            throw new ContextualError(&quot;la super classe &quot; + superclass.getName() + &quot; n'existe pas&quot;, this.getLocation());</span>
+        }
+<span class="fc" id="L75">        this.classExtension.setDefinition(superclass_def); //pas sur que ce soit ici qu'on fait ça</span>
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">        if(!superclass_def.getType().isClass() || superclass_def.getType() == null){</span>
+<span class="fc" id="L77">            throw new ContextualError(&quot;la super classe &quot; + superclass.getName() + &quot; n'existe pas&quot;, this.getLocation());</span>
+        }
+        else{
+<span class="fc" id="L80">            ClassType class_type = new ClassType(this.className.getName(), this.getLocation(), (ClassDefinition)superclass_def);</span>
+<span class="fc" id="L81">            ClassDefinition new_class_def  = class_type.getDefinition();</span>
+<span class="fc" id="L82">            this.className.setDefinition(new_class_def); // pas sur que ce soit ici qu'on fait ça</span>
+<span class="fc" id="L83">            EnvironmentType env_types = compiler.getEnvironmentType();</span>
+<span class="fc" id="L84">            LOG.debug(&quot;verify Class &quot; + className.getName() + &quot;: end&quot;);</span>
+            try{
+<span class="fc" id="L86">                env_types.declare(this.className.getName(), new_class_def);</span>
+<span class="fc" id="L87">            }catch (DoubleDefException d){</span>
+<span class="fc" id="L88">                throw new ContextualError(&quot;la classe &quot; + this.className.getName()+ &quot; existe déjà&quot;,this.getLocation());</span>
+<span class="fc" id="L89">            }</span>
+        }
+<span class="fc" id="L91">    }</span>
+
+    @Override
+    protected void verifyClassMembers(DecacCompiler compiler)
+            throws ContextualError {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+        try{
+<span class="fc" id="L98">            Symbol name = this.className.getName();</span>
+<span class="fc" id="L99">            LOG.debug(&quot;verify ClassMembers &quot; + name.toString() + &quot;: start&quot;);</span>
+<span class="fc" id="L100">            Symbol super_name = this.classExtension.getName();</span>
+<span class="fc" id="L101">            EnvironmentExp env_expf = this.listAttribut.verifyListDeclField(compiler, super_name, name);</span>
+<span class="fc" id="L102">            EnvironmentExp env_expm = this.listMethod.verifyListDeclMethod(compiler, super_name);</span>
+<span class="fc" id="L103">            env_expf.addEnvExp(env_expm);</span>
+
+<span class="fc" id="L105">            ClassDefinition super_def = (ClassDefinition)compiler.getDefinition(super_name);</span>
+<span class="fc" id="L106">            EnvironmentExp env_exp_super = super_def.getMembers();</span>
+<span class="fc" id="L107">            env_expf.setParentEnvironment(env_exp_super);</span>
+
+<span class="fc" id="L109">            ClassDefinition class_def = (ClassDefinition)this.className.getDefinition();</span>
+<span class="fc" id="L110">            EnvironmentExp env_class = class_def.getMembers();</span>
+<span class="fc" id="L111">            env_class.addEnvExp(env_expf);</span>
+<span class="fc" id="L112">            env_class.setParentEnvironment(env_exp_super);</span>
+<span class="fc" id="L113">            LOG.debug(&quot;verify ClassMembers: end&quot;);</span>
+            
+<span class="fc" id="L115">        }catch (DoubleDefException d){</span>
+<span class="fc" id="L116">            throw new ContextualError(&quot;Erreur contextuelle : double définition&quot;, this.getLocation());</span>
+<span class="fc" id="L117">        }</span>
+<span class="fc" id="L118">    }</span>
+    
+    @Override
+    protected void verifyClassBody(DecacCompiler compiler) throws ContextualError {
+<span class="fc" id="L122">        LOG.debug(&quot;verify ClassBody &quot; + className.toString() + &quot;: start&quot;);</span>
+<span class="fc" id="L123">        EnvironmentExp envExp = className.getClassDefinition().getMembers();</span>
+<span class="fc" id="L124">        listAttribut.verifyListDeclFieldpass3(compiler, envExp, className.getClassDefinition());</span>
+<span class="fc" id="L125">        listMethod.verifyListDeclMethodpass3(compiler, envExp, className.getClassDefinition());</span>
+<span class="fc" id="L126">        LOG.debug(&quot;verify DeclClass &quot; + className.toString() + &quot;: end&quot;);</span>
+<span class="fc" id="L127">    }</span>
+
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+<span class="fc" id="L132">        className.prettyPrint(s, prefix, false);</span>
+<span class="fc" id="L133">        classExtension.prettyPrint(s, prefix, false);</span>
+<span class="fc" id="L134">        listAttribut.prettyPrint(s, prefix, false);</span>
+<span class="fc" id="L135">        listMethod.prettyPrint(s, prefix, true);</span>
+<span class="fc" id="L136">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+<span class="fc" id="L140">        className.iterChildren(f);;</span>
+<span class="fc" id="L141">        classExtension.iterChildren(f);;</span>
+<span class="fc" id="L142">        listAttribut.iter(f);</span>
+<span class="fc" id="L143">        listMethod.iter(f);</span>
+<span class="fc" id="L144">    }</span>
+
+    @Override
+    public MethodTable codeGenListMethodTable(DecacCompiler compiler, ListMethodTable listTable){
+<span class="fc" id="L148">        LOG.debug(&quot;method table creation for &quot;+this.className.getName().getName() + &quot;: begin&quot;);</span>
+<span class="fc" id="L149">        ClassDefinition class_def = this.className.getClassDefinition();</span>
+<span class="fc" id="L150">        Symbol class_name = className.getName();</span>
+<span class="fc" id="L151">        MethodTable vTable  = new MethodTable(class_def);</span>
+<span class="fc" id="L152">        this.listMethod.codeGenTableMethod(compiler, class_name,class_def, vTable, listTable);</span>
+<span class="fc" id="L153">        LOG.debug(&quot;method table creation for &quot;+this.className.getName().getName() + &quot;: end&quot;);</span>
+<span class="fc" id="L154">        return vTable;</span>
+    }
+
+    @Override
+    public void codeGenInit(DecacCompiler compiler){
+        //rajouter plus tard le cas d'une sous-classe, et eventuellement des BOV et TSTO
+<span class="fc" id="L160">        LOG.debug(&quot;code gen initialization of :&quot; + this.className.getName().getName() + &quot;:begin&quot;);</span>
+<span class="fc" id="L161">        compiler.addComment(&quot;Initialisation des Champs de &quot; + className.getClass().getName());</span>
+<span class="fc" id="L162">        Label init_label = new Label(&quot;init.&quot;+className.getClassDefinition().getType().getName().getName());</span>
+<span class="fc" id="L163">        compiler.addLabel(init_label);</span>
+<span class="fc" id="L164">        listAttribut.codeGenInitListField(compiler);</span>
+<span class="fc" id="L165">        compiler.addInstruction(new RTS());</span>
+<span class="fc" id="L166">        LOG.debug(&quot;code gen initialization of :&quot; + this.className.getName().getName() + &quot;:end&quot;);</span>
+<span class="fc" id="L167">    }</span>
+     @Override
+    public void codeGenListMethod(DecacCompiler compiler){
+<span class="fc" id="L170">        compiler.addLabel(new Label(&quot;code.Object.equals&quot;));</span>
+<span class="fc" id="L171">        compiler.addInstruction(new RTS());</span>
+<span class="fc" id="L172">        compiler.addComment(&quot;Code des méthodes de la classe &quot; + this.className.getName().getName());</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        for(AbstractDeclMethod method : this.listMethod.getList()){</span>
+<span class="fc" id="L174">            method.codeGenMethod(compiler);</span>
+<span class="fc" id="L175">        }</span>
+<span class="fc" id="L176">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

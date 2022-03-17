@@ -1,0 +1,21 @@
+
+// Description:
+//    Soulève l'erreur (3.53)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : 'float' et 'void' ne sont pas compatibles avec l'opérateur binaire '+' (règle 3.53)
+//
+// Historique:
+//      cree le 06/01/2022
+
+class A {
+    void m() {
+    }
+} 
+
+{
+	float i;
+    A a;
+    i = 1.0 + a.m();
+}

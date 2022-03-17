@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DecacCompiler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca</a> &gt; <span class="el_source">DecacCompiler.java</span></div><h1>DecacCompiler.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca;
+
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.deca.context.EnvironmentType;
+import fr.ensimag.deca.syntax.DecaLexer;
+import fr.ensimag.deca.syntax.DecaParser;
+import fr.ensimag.deca.tools.DecacInternalError;
+import fr.ensimag.deca.tree.AbstractProgram;
+import fr.ensimag.deca.tree.LocationException;
+import fr.ensimag.ima.pseudocode.AbstractLine;
+import fr.ensimag.ima.pseudocode.IMAProgram;
+import fr.ensimag.ima.pseudocode.Instruction;
+import fr.ensimag.ima.pseudocode.Label;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.log4j.Logger;
+import fr.ensimag.deca.context.EnvironmentType;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+
+/**
+ * Decac compiler instance.
+ *
+ * This class is to be instantiated once per source file to be compiled. It
+ * contains the meta-data used for compiling (source file name, compilation
+ * options) and the necessary utilities for compilation (symbol tables, abstract
+ * representation of target file, ...).
+ *
+ * It contains several objects specialized for different tasks. Delegate methods
+ * are used to simplify the code of the caller (e.g. call
+ * compiler.addInstruction() instead of compiler.getProgram().addInstruction()).
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">public class DecacCompiler {</span>
+<span class="fc" id="L41">    private static final Logger LOG = Logger.getLogger(DecacCompiler.class);</span>
+    
+    /**
+     * Portable newline character.
+     */
+<span class="fc" id="L46">    private static final String nl = System.getProperty(&quot;line.separator&quot;, &quot;\n&quot;);</span>
+
+    public DecacCompiler(CompilerOptions compilerOptions, File source) {
+<span class="fc" id="L49">        super();</span>
+<span class="fc" id="L50">        this.compilerOptions = compilerOptions;</span>
+<span class="fc" id="L51">        this.source = source;</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Source file associated with this compiler instance.
+     */
+    public File getSource() {
+<span class="fc" id="L58">        return source;</span>
+    }
+
+    /**
+     * Compilation options (e.g. when to stop compilation, number of registers
+     * to use, ...).
+     */
+    public CompilerOptions getCompilerOptions() {
+<span class="fc" id="L66">        return compilerOptions;</span>
+    }
+
+    /**
+     * @see
+     * fr.ensimag.ima.pseudocode.IMAProgram#add(fr.ensimag.ima.pseudocode.AbstractLine)
+     */
+    public void add(AbstractLine line) {
+<span class="nc" id="L74">        program.add(line);</span>
+<span class="nc" id="L75">    }</span>
+
+    /**
+     * @see fr.ensimag.ima.pseudocode.IMAProgram#addComment(java.lang.String)
+     */
+    public void addComment(String comment) {
+<span class="fc" id="L81">        program.addComment(comment);</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * @see
+     * fr.ensimag.ima.pseudocode.IMAProgram#addLabel(fr.ensimag.ima.pseudocode.Label)
+     */
+    public void addLabel(Label label) {
+<span class="fc" id="L89">        program.addLabel(label);</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * @see
+     * fr.ensimag.ima.pseudocode.IMAProgram#addInstruction(fr.ensimag.ima.pseudocode.Instruction)
+     */
+    public void addInstruction(Instruction instruction) {
+<span class="fc" id="L97">        program.addInstruction(instruction);</span>
+<span class="fc" id="L98">    }</span>
+
+    /**
+     * @see
+     * fr.ensimag.ima.pseudocode.IMAProgram#addInstruction(fr.ensimag.ima.pseudocode.Instruction,
+     * java.lang.String)
+     */
+    public void addInstruction(Instruction instruction, String comment) {
+<span class="nc" id="L106">        program.addInstruction(instruction, comment);</span>
+<span class="nc" id="L107">    }</span>
+    
+    /**
+     * @see 
+     * fr.ensimag.ima.pseudocode.IMAProgram#display()
+     */
+    public String displayIMAProgram() {
+<span class="nc" id="L114">        return program.display();</span>
+    }
+    
+    private final CompilerOptions compilerOptions;
+    private final File source;
+<span class="fc" id="L119">    private final EnvironmentType env_types = new EnvironmentType();</span>
+
+    public Definition getDefinition(Symbol name){
+<span class="fc" id="L122">        return this.env_types.get(name);</span>
+    }
+    public Symbol getSymbol(String name){
+<span class="fc" id="L125">        return this.env_types.createSymbol(name);</span>
+    }
+    public EnvironmentType getEnvironmentType(){
+<span class="fc" id="L128">        return this.env_types;</span>
+    }
+    /**
+     * The main program. Every instruction generated will eventually end up here.
+     */
+<span class="fc" id="L133">    private final IMAProgram program = new IMAProgram();</span>
+ 
+
+    /**
+     * Run the compiler (parse source file, generate code)
+     *
+     * @return true on error
+     */
+    public boolean compile() {
+<span class="fc" id="L142">        String sourceFile = source.getAbsolutePath();</span>
+<span class="fc" id="L143">        String[] split_source = sourceFile.split(&quot;&quot;);</span>
+<span class="fc" id="L144">        String destFile = &quot;&quot;;</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        for(int i = split_source.length -6; i &gt;= 0; i--){</span>
+<span class="fc" id="L146">            destFile = split_source[i] + destFile;</span>
+        }
+<span class="fc" id="L148">        destFile += &quot;.ass&quot;;</span>
+        // A FAIRE: calculer le nom du fichier .ass à partir du nom du
+        // A FAIRE: fichier .deca.
+<span class="fc" id="L151">        PrintStream err = System.err;</span>
+<span class="fc" id="L152">        PrintStream out = System.out;</span>
+<span class="fc" id="L153">        LOG.debug(&quot;Compiling file &quot; + sourceFile + &quot; to assembly file &quot; + destFile);</span>
+        try {
+<span class="fc" id="L155">            return doCompile(sourceFile, destFile, out, err);</span>
+<span class="fc" id="L156">        } catch (LocationException e) {</span>
+<span class="fc" id="L157">            e.display(err);</span>
+<span class="fc" id="L158">            return true;</span>
+<span class="nc" id="L159">        } catch (DecacFatalError e) {</span>
+<span class="nc" id="L160">            err.println(e.getMessage());</span>
+<span class="nc" id="L161">            return true;</span>
+<span class="nc" id="L162">        } catch (StackOverflowError e) {</span>
+<span class="nc" id="L163">            LOG.debug(&quot;stack overflow&quot;, e);</span>
+<span class="nc" id="L164">            err.println(&quot;Stack overflow while compiling file &quot; + sourceFile + &quot;.&quot;);</span>
+<span class="nc" id="L165">            return true;</span>
+<span class="fc" id="L166">        } catch (Exception e) {</span>
+<span class="fc" id="L167">            LOG.fatal(&quot;Exception raised while compiling file &quot; + sourceFile</span>
+                    + &quot;:&quot;, e);
+<span class="fc" id="L169">            err.println(&quot;Internal compiler error while compiling file &quot; + sourceFile + &quot;, sorry.&quot;);</span>
+<span class="fc" id="L170">            return true;</span>
+<span class="nc" id="L171">        } catch (AssertionError e) {</span>
+<span class="nc" id="L172">            LOG.fatal(&quot;Assertion failed while compiling file &quot; + sourceFile</span>
+                    + &quot;:&quot;, e);
+<span class="nc" id="L174">            err.println(&quot;Internal compiler error while compiling file &quot; + sourceFile + &quot;, sorry.&quot;);</span>
+<span class="nc" id="L175">            return true;</span>
+        }
+    }
+
+    /**
+     * Internal function that does the job of compiling (i.e. calling lexer,
+     * verification and code generation).
+     *
+     * @param sourceName name of the source (deca) file
+     * @param destName name of the destination (assembly) file
+     * @param out stream to use for standard output (output of decac -p)
+     * @param err stream to use to display compilation errors
+     *
+     * @return true on error
+     */
+    private boolean doCompile(String sourceName, String destName,
+            PrintStream out, PrintStream err)
+            throws DecacFatalError, LocationException {
+<span class="fc" id="L193">        AbstractProgram prog = doLexingAndParsing(sourceName, err);</span>
+
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (prog == null) {</span>
+<span class="fc" id="L196">            LOG.info(&quot;Parsing failed&quot;);</span>
+<span class="fc" id="L197">            return true;</span>
+        }
+<span class="pc bpc" id="L199" title="2 of 4 branches missed.">        assert(prog.checkAllLocations());</span>
+
+
+<span class="fc" id="L202">        prog.verifyProgram(this);</span>
+<span class="pc bpc" id="L203" title="2 of 4 branches missed.">        assert(prog.checkAllDecorations());</span>
+
+<span class="fc" id="L205">        addComment(&quot;start main program&quot;);</span>
+<span class="fc" id="L206">        prog.codeGenProgram(this);</span>
+<span class="fc" id="L207">        addComment(&quot;end main program&quot;);</span>
+<span class="fc" id="L208">        LOG.debug(&quot;Generated assembly code:&quot; + nl + program.display());</span>
+<span class="fc" id="L209">        LOG.info(&quot;Output file assembly file is: &quot; + destName);</span>
+
+<span class="fc" id="L211">        FileOutputStream fstream = null;</span>
+        try {
+<span class="fc" id="L213">            fstream = new FileOutputStream(destName);</span>
+<span class="nc" id="L214">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L215">            throw new DecacFatalError(&quot;Failed to open output file: &quot; + e.getLocalizedMessage());</span>
+<span class="fc" id="L216">        }</span>
+
+<span class="fc" id="L218">        LOG.info(&quot;Writing assembler file ...&quot;);</span>
+
+<span class="fc" id="L220">        program.display(new PrintStream(fstream));</span>
+<span class="fc" id="L221">        LOG.info(&quot;Compilation of &quot; + sourceName + &quot; successful.&quot;);</span>
+<span class="fc" id="L222">        return false;</span>
+    }
+
+    /**
+     * Build and call the lexer and parser to build the primitive abstract
+     * syntax tree.
+     *
+     * @param sourceName Name of the file to parse
+     * @param err Stream to send error messages to
+     * @return the abstract syntax tree
+     * @throws DecacFatalError When an error prevented opening the source file
+     * @throws DecacInternalError When an inconsistency was detected in the
+     * compiler.
+     * @throws LocationException When a compilation error (incorrect program)
+     * occurs.
+     */
+    protected AbstractProgram doLexingAndParsing(String sourceName, PrintStream err)
+            throws DecacFatalError, DecacInternalError {
+        DecaLexer lex;
+        try {
+<span class="fc" id="L242">            lex = new DecaLexer(CharStreams.fromFileName(sourceName));</span>
+<span class="nc" id="L243">        } catch (IOException ex) {</span>
+<span class="nc" id="L244">            throw new DecacFatalError(&quot;Failed to open input file: &quot; + ex.getLocalizedMessage());</span>
+<span class="fc" id="L245">        }</span>
+<span class="fc" id="L246">        lex.setDecacCompiler(this);</span>
+<span class="fc" id="L247">        CommonTokenStream tokens = new CommonTokenStream(lex);</span>
+<span class="fc" id="L248">        DecaParser parser = new DecaParser(tokens);</span>
+<span class="fc" id="L249">        parser.setDecacCompiler(this);</span>
+<span class="fc" id="L250">        return parser.parseProgramAndManageErrors(err);</span>
+    }
+
+
+    /**
+     * on récupère le début de la méthode doCompile et on l'adapte pour les spécifications
+     * de l'option -p. On arrête decac après l’étape de construction de l’arbre, et affiche
+     * la décompilation de ce dernier.
+     *
+     * @param sourceName name of the source (deca) file
+     * @param out stream to use for standard output (output of decac -p)
+     * @param err stream to use to display compilation errors
+     *
+     * @return true on error
+     */
+    private boolean doCompile_p_option(String sourceName,
+                                       PrintStream out, PrintStream err)
+            throws DecacFatalError, LocationException {
+<span class="fc" id="L268">        AbstractProgram prog = doLexingAndParsing(sourceName, err);</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if (prog == null) {</span>
+<span class="fc" id="L270">            LOG.info(&quot;Parsing failed&quot;);</span>
+<span class="fc" id="L271">            return true;</span>
+        } else {
+<span class="fc" id="L273">            prog.decompile(out);</span>
+<span class="fc" id="L274">            return false;</span>
+        }
+    }
+
+    /**
+     * On parse le fichier source et on print l'arbre associé
+     *
+     * @return true on error
+     */
+    public boolean compile_p_option() {
+<span class="fc" id="L284">        String sourceFile = source.getAbsolutePath();</span>
+<span class="fc" id="L285">        PrintStream err = System.err;</span>
+<span class="fc" id="L286">        PrintStream out = System.out;</span>
+        try {
+<span class="fc" id="L288">            return doCompile_p_option(sourceFile, out, err);</span>
+<span class="nc" id="L289">        } catch (LocationException e) {</span>
+<span class="nc" id="L290">            e.display(err);</span>
+<span class="nc" id="L291">            return true;</span>
+<span class="nc" id="L292">        } catch (DecacFatalError e) {</span>
+<span class="nc" id="L293">            err.println(e.getMessage());</span>
+<span class="nc" id="L294">            return true;</span>
+<span class="nc" id="L295">        } catch (StackOverflowError e) {</span>
+<span class="nc" id="L296">            LOG.debug(&quot;stack overflow&quot;, e);</span>
+<span class="nc" id="L297">            err.println(&quot;Stack overflow while compiling file &quot; + sourceFile + &quot;.&quot;);</span>
+<span class="nc" id="L298">            return true;</span>
+<span class="nc" id="L299">        } catch (Exception e) {</span>
+<span class="nc" id="L300">            LOG.fatal(&quot;Exception raised while compiling file &quot; + sourceFile</span>
+                    + &quot;:&quot;, e);
+<span class="nc" id="L302">            err.println(&quot;Internal compiler error while compiling file &quot; + sourceFile + &quot;, sorry.&quot;);</span>
+<span class="nc" id="L303">            return true;</span>
+<span class="nc" id="L304">        } catch (AssertionError e) {</span>
+<span class="nc" id="L305">            LOG.fatal(&quot;Assertion failed while compiling file &quot; + sourceFile</span>
+                    + &quot;:&quot;, e);
+<span class="nc" id="L307">            err.println(&quot;Internal compiler error while compiling file &quot; + sourceFile + &quot;, sorry.&quot;);</span>
+<span class="nc" id="L308">            return true;</span>
+        }
+    }
+
+    /**
+     * arrête decac après l’étape de vérifications
+     * (ne produit aucune sortie en l’absence d’erreur)
+     *
+     * @param sourceName name of the source (deca) file
+     * @param destName name of the destination (assembly) file
+     * @param out stream to use for standard output (output of decac -p)
+     * @param err stream to use to display compilation errors
+     *
+     * @return true on error
+     */
+    private boolean doCompile_v_option(String sourceName,
+                              PrintStream out, PrintStream err)
+            throws DecacFatalError, LocationException {
+<span class="fc" id="L326">        AbstractProgram prog = doLexingAndParsing(sourceName, err);</span>
+
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        if (prog == null) {</span>
+<span class="fc" id="L329">            LOG.info(&quot;Parsing failed&quot;);</span>
+<span class="fc" id="L330">            return true;</span>
+        }
+<span class="pc bpc" id="L332" title="2 of 4 branches missed.">        assert(prog.checkAllLocations());</span>
+
+<span class="fc" id="L334">        prog.verifyProgram(this);</span>
+<span class="pc bpc" id="L335" title="2 of 4 branches missed.">        assert(prog.checkAllDecorations());</span>
+
+<span class="fc" id="L337">        return false;</span>
+    }
+
+    /**
+     * On parse le fichier source et on print l'arbre associé
+     *
+     * @return true on error
+     */
+    public boolean compile_v_option() {
+<span class="fc" id="L346">        String sourceFile = source.getAbsolutePath();</span>
+<span class="fc" id="L347">        PrintStream err = System.err;</span>
+<span class="fc" id="L348">        PrintStream out = System.out;</span>
+        try {
+<span class="fc" id="L350">            return doCompile_v_option(sourceFile, out, err);</span>
+<span class="fc" id="L351">        } catch (LocationException e) {</span>
+<span class="fc" id="L352">            e.display(err);</span>
+<span class="fc" id="L353">            return true;</span>
+<span class="nc" id="L354">        } catch (DecacFatalError e) {</span>
+<span class="nc" id="L355">            err.println(e.getMessage());</span>
+<span class="nc" id="L356">            return true;</span>
+<span class="nc" id="L357">        } catch (StackOverflowError e) {</span>
+<span class="nc" id="L358">            LOG.debug(&quot;stack overflow&quot;, e);</span>
+<span class="nc" id="L359">            err.println(&quot;Stack overflow while compiling file &quot; + sourceFile + &quot;.&quot;);</span>
+<span class="nc" id="L360">            return true;</span>
+<span class="fc" id="L361">        } catch (Exception e) {</span>
+<span class="fc" id="L362">            LOG.fatal(&quot;Exception raised while compiling file &quot; + sourceFile</span>
+                    + &quot;:&quot;, e);
+<span class="fc" id="L364">            err.println(&quot;Internal compiler error while compiling file &quot; + sourceFile + &quot;, sorry.&quot;);</span>
+<span class="fc" id="L365">            return true;</span>
+<span class="nc" id="L366">        } catch (AssertionError e) {</span>
+<span class="nc" id="L367">            LOG.fatal(&quot;Assertion failed while compiling file &quot; + sourceFile</span>
+                    + &quot;:&quot;, e);
+<span class="nc" id="L369">            err.println(&quot;Internal compiler error while compiling file &quot; + sourceFile + &quot;, sorry.&quot;);</span>
+<span class="nc" id="L370">            return true;</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

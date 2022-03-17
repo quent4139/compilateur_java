@@ -1,0 +1,14 @@
+// Description:
+//    Programme écrivant un new object
+//
+// Resultats:
+//    Ne doit pas soulever d'erreur
+//
+// Historique:
+//    cree le 11/01/2022
+
+
+{
+	Object o = new Object();
+}
+

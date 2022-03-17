@@ -1,0 +1,20 @@
+// Description:
+//      test asin de la bibliothèque Math 
+//
+// Resultats:
+//      asin(0.0) = 0.0
+//      asin(0.5) = 0.5 //approximativement
+//		asin(-2.0) : débordement arithmétique
+//
+// Historique:
+//      cree le 17/01/2022
+
+#include "Math.decah"
+{
+    Math m;
+    m = new Math();
+    println("asin(0.0) =", m.asin(0.0));
+    println("asin(0.5) =", m.asin(0.5));
+    println("asin(-3.0) =", m.asin(-3.0));
+}
+

@@ -1,0 +1,15 @@
+// Description:
+//    Soulève l'erreur (3.49)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : 'boolean' et 'string' ne sont pas compatibles avec l'opérateur binaire '/' (règle 3.49)
+//
+// Historique:
+//      cree le 06/01/2022
+
+
+{
+	int var;
+    var = true / "hello";
+}

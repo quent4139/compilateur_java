@@ -1,0 +1,20 @@
+// Description:
+//    Soulève l'erreur (2.7)
+//
+// Resultat:
+//    Erreur contextuelle
+//    Ligne 18 : il y a trop d'arguments (règle 2.7)
+//
+// Historique:
+//      cree le 19/01/2022
+
+class A {
+
+    void m() {}
+}
+
+{
+    A a = new A();
+    a.m(495);
+}
+

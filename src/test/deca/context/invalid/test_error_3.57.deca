@@ -1,0 +1,14 @@
+// Description:
+//    Soulève l'erreur (3.57)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : 'int' et 'boolean' ne sont pas compatibles avec l'opérateur binaire '!=' (règle 3.57)
+//
+// Historique:
+//      cree le 06/01/2022
+
+{
+	boolean var;
+    1 != true;
+}

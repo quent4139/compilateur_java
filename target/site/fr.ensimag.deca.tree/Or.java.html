@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Or.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">Or.java</span></div><h1>Or.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.ima.pseudocode.instructions.ADD;
+import fr.ensimag.ima.pseudocode.instructions.SHR;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+
+
+/**
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class Or extends AbstractOpBool {
+
+    public Or(AbstractExpr leftOperand, AbstractExpr rightOperand) {
+<span class="fc" id="L21">        super(leftOperand, rightOperand);</span>
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    protected String getOperatorName() {
+<span class="fc" id="L26">        return &quot;||&quot;;</span>
+    }
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+        // POur faire une or, j'additionne les 2 puis je fais +1
+        // et je fais un décalage vers la droite
+<span class="nc" id="L33">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="nc" id="L34">        GPRegister r3 = Main.rmanager.getRegister();</span>
+<span class="nc" id="L35">        this.getLeftOperand().codeGenInst(compiler);</span>
+<span class="nc" id="L36">        compiler.addInstruction(new LOAD(r2, r3));</span>
+<span class="nc" id="L37">        this.getRightOperand().codeGenInst(compiler);</span>
+<span class="nc" id="L38">        compiler.addInstruction(new ADD(r3, r2));</span>
+<span class="nc" id="L39">        compiler.addInstruction(new ADD(new ImmediateInteger(1), r2));</span>
+<span class="nc" id="L40">        compiler.addInstruction(new SHR(r2));</span>
+<span class="nc" id="L41">        Main.rmanager.freeRegister(r3);</span>
+<span class="nc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

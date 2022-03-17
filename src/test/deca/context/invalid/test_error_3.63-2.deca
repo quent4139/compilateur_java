@@ -1,0 +1,14 @@
+// Description:
+//    Programme soulevant l'erreur (3.63)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : Le type 'null' est incompatible avec l'opérateur unaire '!' (règle 3.63)
+//
+// Historique:
+//    cree le 14/01/2022
+
+{
+	boolean var;
+    var = !null;
+}

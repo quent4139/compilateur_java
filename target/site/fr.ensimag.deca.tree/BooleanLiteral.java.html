@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BooleanLiteral.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">BooleanLiteral.java</span></div><h1>BooleanLiteral.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import java.io.PrintStream;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.WSTR;
+import fr.ensimag.ima.pseudocode.ImmediateString;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+/**
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class BooleanLiteral extends AbstractExpr {
+
+    private boolean value;
+
+<span class="fc" id="L30">    public BooleanLiteral(boolean value) {</span>
+<span class="fc" id="L31">        this.value = value;</span>
+<span class="fc" id="L32">    }</span>
+
+    public boolean getValue() {
+<span class="nc" id="L35">        return value;</span>
+    }
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass) throws ContextualError {
+<span class="fc" id="L41">        Symbol bool_symbol = compiler.getSymbol(&quot;boolean&quot;);</span>
+<span class="fc" id="L42">        Definition def_bool = compiler.getDefinition(bool_symbol);</span>
+<span class="fc" id="L43">        Type bool_type = def_bool.getType();</span>
+<span class="fc" id="L44">        this.setType(bool_type);</span>
+<span class="fc" id="L45">        return bool_type;</span>
+    }
+
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+<span class="nc" id="L50">        String true_string = &quot;true&quot;;</span>
+<span class="nc" id="L51">        String false_string = &quot;false&quot;;</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if(this.value){</span>
+<span class="nc" id="L53">            compiler.addInstruction(new WSTR(new ImmediateString(true_string)));</span>
+        }
+        else{
+<span class="nc" id="L56">            compiler.addInstruction(new WSTR(new ImmediateString(false_string)));</span>
+        }
+<span class="nc" id="L58">    }</span>
+
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if(this.value){</span>
+<span class="fc" id="L63">            ImmediateInteger im_bool = new ImmediateInteger(1);</span>
+<span class="fc" id="L64">            GPRegister r2 = new Register(&quot;r2&quot;).getR(2); // à changer</span>
+<span class="fc" id="L65">            compiler.addInstruction(new LOAD(im_bool, r2));</span>
+<span class="fc" id="L66">        }</span>
+        else{
+<span class="fc" id="L68">            ImmediateInteger im_bool = new ImmediateInteger(0);</span>
+<span class="fc" id="L69">            GPRegister r2 = new Register(&quot;r2&quot;).getR(2); // à changer</span>
+<span class="fc" id="L70">            compiler.addInstruction(new LOAD(im_bool, r2));</span>
+        }
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L76">        s.print(Boolean.toString(value));</span>
+<span class="fc" id="L77">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L82">    }</span>
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L87">    }</span>
+
+    @Override
+    String prettyPrintNode() {
+<span class="fc" id="L91">        return &quot;BooleanLiteral (&quot; + value + &quot;)&quot;;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

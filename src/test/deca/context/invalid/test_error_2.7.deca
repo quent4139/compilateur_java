@@ -1,0 +1,21 @@
+// Description:
+//    Soulève l'erreur (2.7)
+//
+// Resultat:
+//    Erreur contextuelle
+//    Ligne 20 :  "m" est une méthode définie dans une superclasse (règle 2.7)
+//
+// Historique:
+//      cree le 19/01/2022
+
+class A {
+    int i;
+    
+    int m(){
+    }
+}
+
+
+class B extends A {
+    int m;
+}

@@ -1,0 +1,20 @@
+// Description:
+//    Soulève l'erreur (1.3)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : Identifier 'A' déjà déclaré (règle 1.3)
+//
+// Historique:
+//      cree le 06/01/2022
+
+
+class A {
+}
+
+class A {
+}
+
+{
+}
+

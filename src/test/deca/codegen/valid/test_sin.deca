@@ -1,0 +1,25 @@
+// Description:
+//      test sin de la bibliothèque Math 
+//
+// Resultats:
+//      sin(0.0) = 1.0
+//      sin(1.22) = 1.0
+//		sin(3.14) = 0.0
+//		sin(200.0) = -0.87 //approximativement 
+//      sin(10000.0) = -0.30561438
+//
+// Historique:
+//      cree le 17/01/2022
+
+#include "Math.decah"
+{
+    Math m;
+    m = new Math();
+    println("sin(0.0) =", m.sin(0.0));
+    println("sin(1.22) =", m.sin(1.87));
+    println("sin(3.14) =", m.sin(3.14));
+    println("sin(200.0) =", m.sin(200.0));
+    println("sin(10000.0) =", m.sin(10000.0));
+
+}
+

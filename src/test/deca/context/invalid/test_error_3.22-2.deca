@@ -1,0 +1,14 @@
+// Description:
+//    Programme soulevant l'erreur (3.22)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : Expression booléenne attendue (règle 3.22)
+//
+// Historique:
+//    cree le 13/01/2022
+
+{
+   if(1.0) {
+   }
+}

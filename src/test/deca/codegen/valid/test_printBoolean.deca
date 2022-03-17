@@ -1,0 +1,10 @@
+{
+	print(true);
+	println(true);
+	print(1 == 1);
+
+	boolean a = true;
+	boolean b = false;
+	println(a);
+	println(b);
+}

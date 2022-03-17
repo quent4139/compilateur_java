@@ -1,0 +1,26 @@
+// Description:
+//    test la suite de Fibonacci
+//
+// Resultat:
+//	    832040
+// 
+// Historique:
+//    cree le 17/01/2022
+
+
+{
+    int n = 30;
+    int i = 1;
+    int premier = 0;
+    int deuxieme = 1;
+    int terme;
+    while (i<=n) {
+        terme = premier + deuxieme;
+        premier = deuxieme;
+        deuxieme = terme;
+        i = i+1;
+    }
+
+    print(premier);
+}
+

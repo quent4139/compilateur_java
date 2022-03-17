@@ -1,0 +1,10 @@
+#include "Math.decah"
+
+{
+	float res;
+	float res2;
+	Math m = new Math();
+	res = m.atan(1.0/5.0);
+	res2 = m.atan(1.0/239.0);
+	println(4 * res - res2, " =  0.78539816339  = π/4");
+}

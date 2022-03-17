@@ -1,0 +1,15 @@
+// Description:
+//      Cast d'une expression float vers int
+//
+// Resultat:
+//       2578
+// 
+// Historique:
+//    cree le 20/01/2022
+
+{
+    float a = 2578.36;
+    int b = (int) (a);
+    print(b);
+}
+

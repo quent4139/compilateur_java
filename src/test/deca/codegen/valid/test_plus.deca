@@ -1,0 +1,15 @@
+// Description:
+//      test l'utilisation de plus
+//
+// Resultats:
+//      ima_output:8
+//
+// Historique:
+//      cree le 17/01/2022
+
+{
+    int a = 4;
+    a = a + 4;
+    println(a);
+}
+

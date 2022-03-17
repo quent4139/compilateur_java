@@ -1,0 +1,15 @@
+// Description:
+//    Test include 
+//
+// Resultats:
+//    le programme importe la bibliothèque 
+//
+// Historique:
+//    cree le 21/01/2022
+
+
+#include "Math.decah"
+
+{
+ Math m = new Math();
+}

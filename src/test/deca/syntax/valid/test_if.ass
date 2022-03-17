@@ -1,0 +1,18 @@
+; start main program
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+; Beginning of instructions:
+	LOAD #1, R2
+	CMP #1, R2
+	BEQ then_label1
+	BRA else_label1
+then_label1:
+	WSTR "ca marche, la condition est vraie"
+	WNL
+	BRA end_if1
+else_label1:
+	BRA end_if1
+end_if1:
+	HALT
+; end main program

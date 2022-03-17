@@ -1,0 +1,15 @@
+// Description:
+//      test le modulo
+//
+// Resultats:
+//      ima_output:0
+//
+// Historique:
+//      cree le 17/01/2022
+
+{
+    int a = 4765756;
+    a = a % 2;
+    println(a);
+}
+

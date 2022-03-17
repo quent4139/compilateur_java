@@ -1,0 +1,14 @@
+
+// Description:
+//    Soulève l'erreur (3.56)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : 'float' et 'boolean' ne sont pas compatibles avec l'opérateur binaire '==' (règle 3.56)
+//
+// Historique:
+//      cree le 06/01/2022
+
+{
+    1.0 == true;
+}

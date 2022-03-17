@@ -1,0 +1,15 @@
+// Description:
+//    test de l'extension
+//
+// Resultats: Main qui affiche le cosinus d'un entier
+//
+//
+// Historique:
+//    crée le 18/01/2021
+
+
+
+{
+    int x = 1;
+    print(cos(x));
+}

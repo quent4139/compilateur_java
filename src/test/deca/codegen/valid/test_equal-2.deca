@@ -1,0 +1,21 @@
+// Description:
+//      test le test d'égalité dans une condition
+//
+// Resultat:
+//      oui c'est bon
+//
+// Historique:
+//      cree le 17/01/2022
+
+{
+    int a = 6;
+    int b = 3040;
+    int c = 4;
+    if( (b+c) == a ){
+        println("heuuu non");
+    }else{
+        println("oui c'est bon");
+    }
+
+}
+

@@ -1,0 +1,14 @@
+// Description:
+//    test l'affection des chaines et leur affichage
+//
+// Resultats:
+//    Affiche "toto"
+//
+// Historique:
+//    cree le 10/01/2022
+
+string s;
+{
+    s = "toto";
+    println(s);
+}

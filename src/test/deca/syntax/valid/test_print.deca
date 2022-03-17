@@ -1,0 +1,13 @@
+// Description:
+//    Programme minimaliste testant println.
+//
+// Resultats:
+//    Affichage de a
+//
+// Historique:
+//    cree le 10/01/2022
+
+
+{
+        print(a);
+}

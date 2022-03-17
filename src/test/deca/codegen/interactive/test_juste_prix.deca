@@ -1,0 +1,31 @@
+// Description:
+//      Simule le jeu du juste prix
+//
+// Resultat:
+//      Demande l'entier tant que cela n'est pas l'entier pensé 
+// 
+// Historique:
+//    cree le 18/01/2022
+
+{
+    int x;
+    int res = 761;
+    println("Veuillez entrer un interger :");
+    x = readInt();
+    while (x != res) {
+    if (x < res) {
+        println("Le prix exact est plus haut. Réessaye :");
+        x = readInt();
+    } 
+    else { if (x > res) {
+        println("Le prix exact est plus bas. Réessaye :");
+        x = readInt();} 
+        
+    else { if (x == res) {
+        println("Oui gagné !");
+        print("Le juste prix était 761");}
+    }
+    }
+}
+}
+

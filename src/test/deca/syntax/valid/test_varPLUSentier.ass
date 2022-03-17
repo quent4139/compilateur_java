@@ -1,0 +1,21 @@
+; start main program
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+	LOAD #1, R2
+	STORE R2, 3(GB)
+	LOAD #5, R2
+	STORE R2, 4(GB)
+; Beginning of instructions:
+	LOAD 3(GB), R2
+	LOAD R2, R3
+	LOAD #4, R2
+	ADD R3, R2
+	STORE R2, 3(GB)
+	LOAD 3(GB), R2
+	LOAD R2, R3
+	LOAD 4(GB), R2
+	ADD R3, R2
+	STORE R2, 4(GB)
+	HALT
+; end main program

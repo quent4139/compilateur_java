@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Identifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">Identifier.java</span></div><h1>Identifier.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.ClassType;
+import fr.ensimag.deca.context.MethodDefinition;
+import fr.ensimag.deca.context.Signature;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.context.FieldDefinition;
+import fr.ensimag.deca.context.MethodDefinition;
+import fr.ensimag.deca.context.ParamDefinition;
+import fr.ensimag.deca.context.ExpDefinition;
+import fr.ensimag.deca.context.VariableDefinition;
+import fr.ensimag.deca.tools.DecacInternalError;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+
+import java.io.PrintStream;
+
+import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
+import fr.ensimag.ima.pseudocode.DAddr;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.ima.pseudocode.instructions.WSTR;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.Label;
+import fr.ensimag.ima.pseudocode.instructions.BRA;
+import fr.ensimag.ima.pseudocode.instructions.BEQ;
+import fr.ensimag.ima.pseudocode.instructions.CMP;
+import fr.ensimag.ima.pseudocode.ImmediateInteger;
+import fr.ensimag.ima.pseudocode.ImmediateString;
+
+import org.apache.log4j.Logger;
+
+/**
+ * Deca Identifier
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class Identifier extends AbstractIdentifier {
+
+<span class="fc" id="L51">    private static final Logger LOG = Logger.getLogger(Identifier.class);</span>
+
+    @Override
+    protected void checkDecoration() {
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (getDefinition() == null) {</span>
+<span class="nc" id="L56">            throw new DecacInternalError(&quot;Identifier &quot; + this.getName() + &quot; has no attached Definition&quot;);</span>
+        }
+<span class="fc" id="L58">    }</span>
+
+    @Override
+    public Definition getDefinition() {
+<span class="fc" id="L62">        return definition;</span>
+    }
+
+    /**
+     * Like {@link #getDefinition()}, but works only if the definition is a
+     * ClassDefinition.
+     * &lt;p&gt;
+     * This method essentially performs a cast, but throws an explicit exception
+     * when the cast fails.
+     *
+     * @throws DecacInternalError if the definition is not a class definition.
+     */
+    @Override
+    public ClassDefinition getClassDefinition() {
+        try {
+<span class="fc" id="L77">            return (ClassDefinition) definition;</span>
+<span class="nc" id="L78">        } catch (ClassCastException e) {</span>
+<span class="nc" id="L79">            throw new DecacInternalError(</span>
+                    &quot;Identifier &quot;
+<span class="nc" id="L81">                            + getName()</span>
+                            + &quot; is not a class identifier, you can't call getClassDefinition on it&quot;);
+        }
+    }
+
+    /**
+     * Like {@link #getDefinition()}, but works only if the definition is a
+     * MethodDefinition.
+     * &lt;p&gt;
+     * This method essentially performs a cast, but throws an explicit exception
+     * when the cast fails.
+     *
+     * @throws DecacInternalError if the definition is not a method definition.
+     */
+    @Override
+    public MethodDefinition getMethodDefinition() {
+        try {
+<span class="fc" id="L98">            return (MethodDefinition) definition;</span>
+<span class="nc" id="L99">        } catch (ClassCastException e) {</span>
+<span class="nc" id="L100">            throw new DecacInternalError(</span>
+                    &quot;Identifier &quot;
+<span class="nc" id="L102">                            + getName()</span>
+                            + &quot; is not a method identifier, you can't call getMethodDefinition on it&quot;);
+        }
+    }
+
+    /**
+     * Like {@link #getDefinition()}, but works only if the definition is a
+     * FieldDefinition.
+     * &lt;p&gt;
+     * This method essentially performs a cast, but throws an explicit exception
+     * when the cast fails.
+     *
+     * @throws DecacInternalError if the definition is not a field definition.
+     */
+    @Override
+    public FieldDefinition getFieldDefinition() {
+        try {
+<span class="fc" id="L119">            return (FieldDefinition) definition;</span>
+<span class="nc" id="L120">        } catch (ClassCastException e) {</span>
+<span class="nc" id="L121">            throw new DecacInternalError(</span>
+                    &quot;Identifier &quot;
+<span class="nc" id="L123">                            + getName()</span>
+                            + &quot; is not a field identifier, you can't call getFieldDefinition on it&quot;);
+        }
+    }
+
+    /**
+     * Like {@link #getDefinition()}, but works only if the definition is a
+     * VariableDefinition.
+     * &lt;p&gt;
+     * This method essentially performs a cast, but throws an explicit exception
+     * when the cast fails.
+     *
+     * @throws DecacInternalError if the definition is not a field definition.
+     */
+    @Override
+    public VariableDefinition getVariableDefinition() {
+        try {
+<span class="fc" id="L140">            return (VariableDefinition) definition;</span>
+<span class="nc" id="L141">        } catch (ClassCastException e) {</span>
+<span class="nc" id="L142">            throw new DecacInternalError(</span>
+                    &quot;Identifier &quot;
+<span class="nc" id="L144">                            + getName()</span>
+                            + &quot; is not a variable identifier, you can't call getVariableDefinition on it&quot;);
+        }
+    }
+
+    /**
+     * Like {@link #getDefinition()}, but works only if the definition is a ExpDefinition.
+     * &lt;p&gt;
+     * This method essentially performs a cast, but throws an explicit exception
+     * when the cast fails.
+     *
+     * @throws DecacInternalError if the definition is not a field definition.
+     */
+    @Override
+    public ExpDefinition getExpDefinition() {
+        try {
+<span class="nc" id="L160">            return (ExpDefinition) definition;</span>
+<span class="nc" id="L161">        } catch (ClassCastException e) {</span>
+<span class="nc" id="L162">            throw new DecacInternalError(</span>
+                    &quot;Identifier &quot;
+<span class="nc" id="L164">                            + getName()</span>
+                            + &quot; is not a Exp identifier, you can't call getExpDefinition on it&quot;);
+        }
+    }
+
+    @Override
+    public void setDefinition(Definition definition) {
+<span class="fc" id="L171">        this.definition = definition;</span>
+<span class="fc" id="L172">    }</span>
+
+    @Override
+    public Symbol getName() {
+<span class="fc" id="L176">        return name;</span>
+    }
+
+    private Symbol name;
+
+<span class="fc" id="L181">    public Identifier(Symbol name) {</span>
+<span class="fc" id="L182">        Validate.notNull(name);</span>
+<span class="fc" id="L183">        this.name = name;</span>
+<span class="fc" id="L184">    }</span>
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+                           ClassDefinition currentClass) throws ContextualError {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L190">        LOG.debug(&quot;verify Expr identifier: start&quot;);</span>
+<span class="fc" id="L191">        Definition exp_def = localEnv.get(this.name);</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (exp_def == null) {</span>
+<span class="fc" id="L193">            throw new ContextualError(&quot;indentifiant \&quot;&quot; + getName() + &quot;\&quot; invalide&quot;, this.getLocation());</span>
+        } else {
+<span class="fc" id="L195">            this.setDefinition(exp_def);</span>
+<span class="fc" id="L196">            Type t = exp_def.getType();</span>
+<span class="fc" id="L197">            LOG.debug(&quot;verify Expr identifier: end&quot;);</span>
+<span class="fc" id="L198">            return t;</span>
+        }
+    }
+
+    /**
+     * Implements non-terminal &quot;type&quot; of [SyntaxeContextuelle] in the 3 passes
+     *
+     * @param compiler contains &quot;env_types&quot; attribute
+     */
+    @Override
+    public Type verifyType(DecacCompiler compiler) throws ContextualError {
+<span class="fc" id="L209">        LOG.debug(&quot;verify type: start&quot;);</span>
+<span class="fc" id="L210">        Definition type_def = compiler.getDefinition(this.name);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (type_def == null) {</span>
+<span class="fc" id="L212">            throw new ContextualError(&quot;type indéfini&quot;, this.getLocation());</span>
+        } else {
+<span class="fc" id="L214">            Type t = type_def.getType();</span>
+<span class="fc" id="L215">            this.setDefinition(type_def);</span>
+<span class="fc" id="L216">            LOG.debug(&quot;verify type: end&quot;);</span>
+<span class="fc" id="L217">            return t;</span>
+        }
+    }
+
+    public void verifySignature(DecacCompiler compiler, EnvironmentExp localenv, ClassDefinition currentclass,
+                                Signature signature) throws ContextualError {
+<span class="nc" id="L223">        LOG.debug(&quot;verify Signature: start&quot;);</span>
+<span class="nc" id="L224">        Signature realsignature = compiler.getDefinition(getName()).asMethodDefinition(&quot;Pas une méthode&quot;,</span>
+<span class="nc" id="L225">                this.getLocation()).getSignature();</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (realsignature.size() != signature.size()) {</span>
+<span class="nc" id="L227">            throw new ContextualError(&quot;signature non conforme, pas le bon nombre de paramètres&quot;, this.getLocation());</span>
+        }
+<span class="nc bnc" id="L229" title="All 4 branches missed.">        if (realsignature.size() == 0 &amp;&amp; signature.size() == 0) {</span>
+<span class="nc" id="L230">            LOG.debug(&quot;verify Signature: end&quot;);</span>
+<span class="nc" id="L231">            return;</span>
+        }
+<span class="nc" id="L233">        int size = realsignature.size();</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        for (int cpt = 0; cpt &lt; size; cpt++) {</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">            if (!signature.paramNumber(cpt).sameType(realsignature.paramNumber(cpt))) {</span>
+<span class="nc" id="L236">                throw new ContextualError(&quot;Le param &quot; + cpt + &quot; est de type &quot; + signature.paramNumber(cpt).getName().getName()</span>
+<span class="nc" id="L237">                        + &quot; alors qu'il devrait être de type &quot; + realsignature.paramNumber(cpt).getName().getName(),</span>
+<span class="nc" id="L238">                        this.getLocation());</span>
+            }
+        }
+<span class="nc" id="L241">        LOG.debug(&quot;verify Signature: end&quot;);</span>
+<span class="nc" id="L242">    }</span>
+
+    private Definition definition;
+    
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="fc" id="L248">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="fc" id="L249">        Register stack_register = new Register(&quot;stack&quot;).GB;</span>
+<span class="fc" id="L250">        Definition var_def = this.getDefinition();</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if(var_def.isField()){</span>
+            //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+            // faudra rajouter les push et pop et pas sur que ça marche
+<span class="fc" id="L254">            Register lb = Main.rmanager.getLB();</span>
+<span class="fc" id="L255">            int offset  = ((FieldDefinition)var_def).getIndex() + 1;</span>
+<span class="fc" id="L256">            RegisterOffset this_heap = new RegisterOffset(-2, lb);</span>
+<span class="fc" id="L257">            compiler.addInstruction(new LOAD(this_heap, r2));</span>
+<span class="fc" id="L258">            RegisterOffset this_field = new RegisterOffset(offset, r2);</span>
+<span class="fc" id="L259">            compiler.addInstruction(new LOAD(this_field, r2));</span>
+
+<span class="fc" id="L261">        }</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        else if(var_def.isParam()){</span>
+<span class="fc" id="L263">            DAddr param_addr = ((ParamDefinition)var_def).getOperand();</span>
+<span class="fc" id="L264">            compiler.addInstruction(new LOAD(param_addr, r2));</span>
+<span class="fc" id="L265">        }</span>
+        else{
+            //DAddr stack_name = new RegisterOffset(((VariableDefinition)var_def).getNumstack(), stack_register);//à modifier plus tard
+<span class="fc" id="L268">            DAddr stack_name  = ((VariableDefinition)var_def).getOperand();</span>
+<span class="fc" id="L269">            compiler.addInstruction(new LOAD(stack_name, r2));</span>
+        }
+<span class="fc" id="L271">    }</span>
+
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+<span class="fc" id="L275">        LOG.debug(&quot;CodeGenPrint Identifier: start&quot;);</span>
+
+<span class="fc" id="L277">        this.codeGenInst(compiler);</span>
+<span class="fc" id="L278">        GPRegister r1 = new Register(&quot;r1&quot;).getR(1);</span>
+<span class="fc" id="L279">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="fc" id="L280">        Definition var_def = this.getDefinition();</span>
+<span class="fc" id="L281">        Type t = var_def.getType();</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if(t.isInt()){</span>
+<span class="fc" id="L283">            compiler.addInstruction(new LOAD(r2, r1));</span>
+<span class="fc" id="L284">            compiler.addInstruction(new WINT());</span>
+<span class="fc" id="L285">            LOG.debug(&quot;COdeGenPrint Identifier: type inst end&quot;);</span>
+        }
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">        else if(t.isFloat()){</span>
+<span class="fc" id="L288">            compiler.addInstruction(new LOAD(r2, r1));</span>
+<span class="fc" id="L289">            compiler.addInstruction(new WFLOAT());</span>
+<span class="fc" id="L290">            LOG.debug(&quot;CodeGenPrint Identifier: type float end&quot;);</span>
+        } // faut rajouter le cas pour un boolean
+<span class="nc bnc" id="L292" title="All 2 branches missed.">        else if(t.isBoolean()){</span>
+
+<span class="nc" id="L294">            Main.num_print_bool ++;</span>
+<span class="nc" id="L295">            Label print_true = new Label(&quot;print_true&quot; + String.valueOf(Main.num_print_bool));</span>
+<span class="nc" id="L296">            Label print_false = new Label(&quot;print_false&quot;+ String.valueOf(Main.num_print_bool));</span>
+<span class="nc" id="L297">            Label end_print = new Label(&quot;end_print&quot;+ String.valueOf(Main.num_print_bool));</span>
+<span class="nc" id="L298">            this.codeGenInst(compiler);</span>
+<span class="nc" id="L299">            compiler.addInstruction(new CMP(new ImmediateInteger(1), r2));</span>
+<span class="nc" id="L300">            compiler.addInstruction(new BEQ(print_true));</span>
+<span class="nc" id="L301">            compiler.addInstruction(new BRA(print_false));</span>
+
+<span class="nc" id="L303">            compiler.addLabel(print_true);</span>
+<span class="nc" id="L304">            compiler.addInstruction(new WSTR(new ImmediateString(&quot;true&quot;)));</span>
+<span class="nc" id="L305">            compiler.addInstruction(new BRA(end_print));</span>
+
+<span class="nc" id="L307">            compiler.addLabel(print_false);</span>
+<span class="nc" id="L308">            compiler.addInstruction(new WSTR(new ImmediateString(&quot;false&quot;)));</span>
+<span class="nc" id="L309">            compiler.addInstruction(new BRA(end_print));</span>
+
+<span class="nc" id="L311">            compiler.addLabel(end_print);</span>
+<span class="nc" id="L312">            LOG.debug(&quot;CodeGenPrint Identifier: type float end&quot;);</span>
+        }
+<span class="fc" id="L314">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L319">    }</span>
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+        // leaf node =&gt; nothing to do
+<span class="fc" id="L324">    }</span>
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L328">        s.print(name.toString());</span>
+<span class="fc" id="L329">    }</span>
+
+    @Override
+    String prettyPrintNode() {
+<span class="fc" id="L333">        return &quot;Identifier (&quot; + getName() + &quot;)&quot;;</span>
+    }
+
+    @Override
+    protected void prettyPrintType(PrintStream s, String prefix) {
+<span class="fc" id="L338">        Definition d = getDefinition();</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        if (d != null) {</span>
+<span class="fc" id="L340">            s.print(prefix);</span>
+<span class="fc" id="L341">            s.print(&quot;definition: &quot;);</span>
+<span class="fc" id="L342">            s.print(d);</span>
+<span class="fc" id="L343">            s.println();</span>
+        }
+<span class="fc" id="L345">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

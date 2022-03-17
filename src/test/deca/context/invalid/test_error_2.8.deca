@@ -1,0 +1,16 @@
+// Description:
+//    Soulève l'erreur (2.8)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : paramètres de méthode portant le même nom (règle 2.8)
+//
+// Historique:
+//      cree le 19/01/2022
+
+Class A {
+    int getX(int x, int x){
+    }
+
+}
+

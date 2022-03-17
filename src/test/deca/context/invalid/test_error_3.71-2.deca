@@ -1,0 +1,16 @@
+// Description:
+//    Soulève l'erreur (3.71)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 15 : Class expected behind "." (règle 3.71)
+//
+// Historique:
+//      cree le 23/01/2022
+
+
+{
+	int a;
+    int b;
+    b = a.x();
+}

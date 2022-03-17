@@ -1,0 +1,16 @@
+// Description:
+//    Programme soulevant l'erreur (3.25)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : Expression booléenne attendue (règle 3.25)
+//
+// Historique:
+//    cree le 16/01/2022
+
+
+{
+	int i = 1;
+   	while(i) {
+  	}
+}

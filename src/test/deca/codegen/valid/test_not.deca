@@ -1,0 +1,19 @@
+// Description:
+//    test l'opérateur unaire not
+//
+// Resultat:
+//	    oui c'est bon
+// 
+// Historique:
+//    cree le 17/01/2022
+
+
+{
+	boolean test = !true;
+    if (! false) {
+        println("bien vu");
+    }
+    else {
+        println("marche po");
+    }
+}

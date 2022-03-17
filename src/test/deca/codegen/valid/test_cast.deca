@@ -1,0 +1,6 @@
+{
+	float i = 1;
+	int j = 1.0;
+	int k = (int)(i);
+	float j = (float)(j);
+}

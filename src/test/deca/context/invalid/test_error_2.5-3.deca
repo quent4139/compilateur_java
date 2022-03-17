@@ -1,0 +1,15 @@
+// Description:
+//    Soulève l'erreur (2.5)
+//
+// Resultat:
+//    Erreur contextuelle
+//    Ligne 13 : Un champ ne peut pas être de type 'void' (règle 2.5)
+//
+// Historique:
+//      cree le 14/01/2022
+
+
+class A {
+    protected void i;
+}
+

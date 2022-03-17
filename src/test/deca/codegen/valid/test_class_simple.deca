@@ -1,0 +1,14 @@
+// Description:
+//    Utilisation de l'implémentation des classes
+//
+// Resultats:
+//    Doit fonctionner correctement
+//
+// Historique:
+//    cree le 23/01/2022
+
+
+class Animal {
+    float poids;
+}
+

@@ -1,0 +1,40 @@
+// Description:
+//   tests sur les operations sur les expressions
+//
+// Resultats:
+//  Operations sur deux variables
+//
+// Historique:
+//    crée le 14/01/2022
+
+int a = 1;
+int b = 5;
+int c = j;
+
+
+   a = b < c;
+   a = b > c;
+   a = b <= c;
+   a = b >= c;
+   a = b || c;
+   a = b && c;
+   a = b == c; 
+   a = b != c;
+   a = b instanceof int;
+   a = b + c;
+   a = b - c;
+   a = b * c;
+   a = b / c;
+   a = b % c;
+   a = -b ;
+   a = !b ;
+   a = cast<int>(b);
+   a = 1;
+   a = 1.0;
+   a = "hello";
+   a = true;
+   a = false;
+   a = null;
+   a = this;
+   a = new A();
+}

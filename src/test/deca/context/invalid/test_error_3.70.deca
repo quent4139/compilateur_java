@@ -1,0 +1,19 @@
+// Description:
+//    Soulève l'erreur (3.70)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : Cannot access a protected field from a main code (règle 3.70)
+//
+// Historique:
+//      cree le 06/01/2022
+
+class A{
+    protected int i;
+}
+
+{
+	A a = new A();
+    int b;
+    b = a.i;
+}

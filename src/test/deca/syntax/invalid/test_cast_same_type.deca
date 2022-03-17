@@ -1,0 +1,16 @@
+// Description:
+//      Cast d'une expression float vers int
+//
+// Resultat:
+//       1:14: Erreur contextuelle : impossible de caster float en float
+
+// 
+// Historique:
+//    cree le 20/01/2022
+
+{
+    float a = (float) (949.2);
+    int b = (int) (787);
+    boolean c = (boolean) (false);
+}
+

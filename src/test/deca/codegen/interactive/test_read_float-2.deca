@@ -1,0 +1,14 @@
+// Description:
+//      Test le readFloat
+//
+// Resultat:
+//      affiche le float pris en entrée avec des opérations
+// 
+// Historique:
+//    cree le 18/01/2022
+
+{
+    int x;
+    x = readFloat();
+    print(2*x*x + 7.1);
+}

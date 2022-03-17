@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractOpArith.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">AbstractOpArith.java</span></div><h1>AbstractOpArith.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.instructions.WINT;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.deca.context.Type;
+
+import org.apache.log4j.Logger;
+
+
+/**
+ * Arithmetic binary operations (+, -, /, ...)
+ * 
+ * @author gl37
+ * @date 01/01/2022
+ */
+public abstract class AbstractOpArith extends AbstractBinaryExpr {
+
+<span class="fc" id="L26">    private static final Logger LOG = Logger.getLogger(AbstractOpArith.class);</span>
+
+    public AbstractOpArith(AbstractExpr leftOperand, AbstractExpr rightOperand) {
+<span class="fc" id="L29">        super(leftOperand, rightOperand);</span>
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass) throws ContextualError {
+<span class="fc" id="L35">        LOG.debug(&quot;verify Expr AbstractOpArith: begin&quot;);</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (getLeftOperand() == null){</span>
+<span class="nc" id="L37">            throw new ContextualError(&quot;operand gauche invalide à &quot; + compiler.getSource().getAbsolutePath() + &quot;:&quot; + this.getLocation().getLine() + &quot;: &quot;, this.getLocation());</span>
+        }
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (getRightOperand() == null) {</span>
+<span class="nc" id="L40">            throw new ContextualError(&quot;operand droite invalide à &quot; + compiler.getSource().getAbsolutePath() + &quot;:&quot; + this.getLocation().getLine() + &quot;: &quot;, this.getLocation());</span>
+        }
+<span class="fc" id="L42">        Type type1 = this.getLeftOperand().verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L43">        Type type2 = this.getRightOperand().verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L44">        String op_name = this.getOperatorName();</span>
+<span class="fc bfc" id="L45" title="All 8 branches covered.">        if((type1.isInt() &amp;&amp; type2.isInt()) || (type1.isFloat() &amp;&amp; type2.isFloat())){</span>
+<span class="fc" id="L46">            this.setType(type1);</span>
+<span class="fc" id="L47">            LOG.debug(&quot;verify Expr AbstractOpArith: end&quot;);</span>
+<span class="fc" id="L48">            return type1;</span>
+        }
+        //conversion implicite
+<span class="fc bfc" id="L51" title="All 4 branches covered.">        else if(type1.isInt() &amp;&amp; type2.isFloat()){</span>
+<span class="fc" id="L52">            AbstractExpr new_left_op = new ConvFloat(this.getLeftOperand());</span>
+<span class="fc" id="L53">            Type new_type1 = new_left_op.verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L54">            this.setLeftOperand(new_left_op);</span>
+<span class="fc" id="L55">            this.setType(type2);</span>
+<span class="fc" id="L56">            LOG.debug(&quot;verify Expr AbstractOpArith: end&quot;);</span>
+<span class="fc" id="L57">            return type2;</span>
+        }
+<span class="fc bfc" id="L59" title="All 4 branches covered.">        else if(type1.isFloat() &amp;&amp; type2.isInt()){</span>
+<span class="fc" id="L60">            AbstractExpr new_right_op = new ConvFloat(this.getRightOperand());</span>
+<span class="fc" id="L61">            Type new_type2 = new_right_op.verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L62">            this.setRightOperand(new_right_op);</span>
+<span class="fc" id="L63">            this.setType(type1);</span>
+<span class="fc" id="L64">            LOG.debug(&quot;verify Expr AbstractOpArith: end&quot;);</span>
+<span class="fc" id="L65">            return type1;</span>
+        }
+        else{
+<span class="fc" id="L68">            String error_msg = &quot;Erreur contextuelle : opération impossible entre &quot;+type1.toString()+&quot; et &quot;+type2.toString();</span>
+<span class="fc" id="L69">            throw new ContextualError(error_msg, this.getLocation());</span>
+        }
+    }
+    
+    @Override
+    protected void codeGenPrint(DecacCompiler compiler) {
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L76">        this.codeGenInst(compiler);</span>
+<span class="fc" id="L77">        GPRegister r2 = new Register(&quot;r2&quot;).getR(2);</span>
+<span class="fc" id="L78">        GPRegister r1 = new Register(&quot;r1&quot;).getR(1);</span>
+<span class="fc" id="L79">        compiler.addInstruction(new LOAD(r2, r1));</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if(this.getType().isInt()){</span>
+<span class="fc" id="L81">            compiler.addInstruction(new WINT());</span>
+        }
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        else if(this.getType().isFloat()){</span>
+<span class="fc" id="L84">            compiler.addInstruction(new WFLOAT());</span>
+        }
+<span class="fc" id="L86">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

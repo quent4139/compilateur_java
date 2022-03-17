@@ -1,0 +1,15 @@
+; start main program
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+; Beginning of instructions:
+while1:
+	LOAD #1, R2
+	CMP #1, R2
+	BNE end_while1
+	WSTR "ca marche, la condition est vraie"
+	WNL
+	BRA while1
+end_while1:
+	HALT
+; end main program

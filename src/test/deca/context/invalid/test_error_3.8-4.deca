@@ -1,0 +1,12 @@
+// Description:
+//    Programme soulevant l'erreur (3.8)
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 10 : Les types "int" et type_null sont incompatibles pour l'affectation (règle 3.8)
+//
+// Historique:
+//    cree le 12/01/2022
+
+{
+	int x = null;
+}

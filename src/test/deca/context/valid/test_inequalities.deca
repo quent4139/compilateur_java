@@ -1,0 +1,34 @@
+// Description:
+// Test les opérateurs binaires d'inégalité
+//
+// Resultats : 
+// Tout fonctionne bien
+//
+// Historique:
+// cree le 17/01/2022
+
+{
+	int a = 6;
+    int b = 2;
+    float f = 1.3;
+    float g = 1.4;
+
+    if (a<b) {};
+    if (a<b) {};
+    if (a<=b) {};
+    if (a>=b) {};
+
+    if (f<g) {};
+    if (f<g) {};
+    if (f<=g) {};
+    if (f>=g) {};
+
+    if (a<g) {};
+    if (a<g) {};
+    if (a<=g) {};
+    if (a>=g) {};
+
+    if (a == b) {};
+    if (a != b) {};
+}
+

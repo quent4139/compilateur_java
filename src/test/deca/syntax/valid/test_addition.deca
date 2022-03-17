@@ -1,0 +1,15 @@
+// Description:
+//    test opération
+//
+// Resultats: Main qui fait une simple addiction
+//
+//
+// Historique:
+//    crée le 19/01/2021
+
+
+
+{
+    int x = 1 + 3;
+    
+}

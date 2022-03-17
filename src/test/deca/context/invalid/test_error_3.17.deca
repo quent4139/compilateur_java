@@ -1,0 +1,14 @@
+// Description:
+//    Soulève l'erreur (3.17)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : Une variable ne peut pas être de type 'void' (règle 3.17)
+//
+// Historique:
+//      cree le 14/01/2022
+
+{
+	void x;
+}
+

@@ -1,0 +1,13 @@
+// Description:
+//    Souleve l'erreur (0.1)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : Identifier 'toto' non déclaré (règle 0.1)
+//
+// Historique:
+//    cree le 06/01/2022
+
+{
+    println(toto);
+}

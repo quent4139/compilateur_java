@@ -1,0 +1,100 @@
+{
+int a = 0;
+	while(a != 4 && a != 56) {
+		println("faîtes votre choix:");
+		println("- 1 pour pierre");
+		println("- 2 pour feuille");
+		println("- 3 pour ciseaux");
+		println("- 4 pour quitter");
+		print("votre choix: ");
+		a = readInt();
+		if (a == 1) {
+			println("choix ordi: feuille");
+			println("dommage c'est perdu!");
+			println("");
+		} else if (a == 2) {
+			println("");
+			println("choix ordi: ciseaux");
+            println("dommage c'est perdu!");
+            println("");
+		} else if (a == 3) {
+			println("");
+			println("choix ordi: pierre");
+            println("dommage c'est perdu!");
+            println("");
+		} else if (a == 56) {
+			println("");
+			println("le puit? je ne connaissais pas cette règle?");
+			println("vous dîtes qu'elle absorbe tout");
+			println("J'ai perdu, je m'avoue vaincu 😢");
+			println("");
+			println("         							_+880_______________++80_______");
+			println("         							_++88______________+880________");
+			println("         							_++88_____________++88________");
+			println("         							__+880___________++88_________");
+			println("         							__+888_________++880__________");
+			println("         							__++880_______++880___________");
+			println("        d8b        888						__++888_____+++880____________");
+            println("        Y8P        888						__++8888__+++8880++88_________");
+            println("                   888						__+++8888+++8880++8888________");
+            println("888  888888 .d8888b888888 .d88b. 888d888888  888		___++888++8888+++888888+80____");
+            println("888  888888d88P    888   d88  88b888P   888  888		___++88++8888++8888888++888___");
+            println("Y88  88P888888     888   888  888888    888  888		___++++++888888fx88888888888___");
+            println(" Y8bd8P 888Y88b.   Y88b. Y88..88P888    Y88b 888		____++++++88888888888888888___");
+            println("  Y88P  888  Y8888P  Y888  Y88P  888      Y88888		____++++++++000888888888888___");
+            println("                                             888		_____+++++++00008f8888888888___");
+            println("                                        Y8b d88P		______+++++++00088888888888___");
+            println("                                          Y88P  		_______+++++++0888f8888888 ");
+            println("");
+		}
+	}
+	if (a == 4) {
+		println("Vous avez malheureusement perdu, je suis donc invincible.");
+		println("Comment vous savez que matrix est mon film préféré?");
+		println("Ah pardon, nous sommes en 98, il ne sort que l'année prochaine.");
+		println("Vous n'êtes pas prêt mais vos enfants vont adorer ça");
+		println("");
+
+		println("         88               ad88                               ");
+		println("         88              d8¨                          ,d     ");
+		println("         88              88                           88     ");
+		println(" ,adPPYb,88  ,adPPYba, MM88MMM ,adPPYba, ,adPPYYba, MM88MMM  ");
+		println("a8¨    ʼY88 a8P_____88   88   a8P_____88 ¨¨     ʼY8   88     ");
+		println("8b       88 8PP¨¨¨¨¨¨   88   8PP¨¨¨¨¨¨¨ ,adPPPPP88   88     ");
+		println("¨8a,   ,d88 ¨8b,   ,aa   88   ¨8b,   ,aa 88,    ,88   88,    ");
+		println(" ʼ¨8bbdP¨Y8  ʼ¨Ybbd8¨ʼ   88    ʼ¨Ybbd8¨ʼ ʼ¨8bbdP¨Y8   ¨Y888  ");
+		println("");
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

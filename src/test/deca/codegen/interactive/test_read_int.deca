@@ -1,0 +1,15 @@
+// Description:
+//      Test le readInt
+//
+// Resultat:
+//      affiche l'entier pris en entrée
+// 
+// Historique:
+//    cree le 18/01/2022
+
+{
+    println("Veuillez entrer un interger :");
+    int x;
+    x = readInt();
+    print(x);
+}

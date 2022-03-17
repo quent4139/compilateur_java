@@ -1,0 +1,10 @@
+; start main program
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+; Beginning of instructions:
+	LOAD #1234, R1
+	WINT
+	WNL
+	HALT
+; end main program

@@ -1,0 +1,17 @@
+// Description:
+//    Programme minimaliste testant la condition else.
+//
+// Resultats:
+//    Syntaxiquement correct
+//
+// Historique:
+//    cree le 10/01/2022
+
+{
+    if (false) {
+        println("if");
+    }
+    else if(true) {
+        println("else");
+    }
+}

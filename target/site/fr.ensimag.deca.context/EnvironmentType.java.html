@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnvironmentType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.context</a> &gt; <span class="el_source">EnvironmentType.java</span></div><h1>EnvironmentType.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.context;
+import java.util.LinkedList;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.context.TypeDefinition;
+import fr.ensimag.deca.context.EnvironmentExp.DoubleDefException;
+import fr.ensimag.deca.tools.SymbolTable;
+import fr.ensimag.deca.tree.Location;
+
+/**
+ * Dictionary associating identifier's TypeDefinition to their names.
+ * 
+ * This is actually a dictionary referring to the environment of the predefined type.
+ * It contains each symbol associated to their type definitions
+ * 
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class EnvironmentType extends Environment{
+    
+       
+
+<span class="fc" id="L23">        public EnvironmentType(){</span>
+<span class="fc" id="L24">            this.expdef = new LinkedList&lt;Definition&gt;();</span>
+<span class="fc" id="L25">            this.symbol = new LinkedList&lt;Symbol&gt;();</span>
+
+            try{
+                //Définition des types prédéfinis
+<span class="fc" id="L29">                Symbol string = this.createSymbol(&quot;string&quot;); // string pas dans env_types_predef donc à supprimer plus tard</span>
+<span class="fc" id="L30">                Type type_string = new StringType(string);</span>
+<span class="fc" id="L31">                Location loc_string = new Location(28, 12, &quot;fr/ensimag/deca/context/StringType.java&quot;); //location à modifier plus tard</span>
+<span class="fc" id="L32">                Definition def_string = new TypeDefinition(type_string, loc_string);</span>
+<span class="fc" id="L33">                this.declare(string, def_string);</span>
+
+<span class="fc" id="L35">                Symbol voidsymb = this.createSymbol(&quot;void&quot;);</span>
+<span class="fc" id="L36">                Type type_void = new VoidType(voidsymb);</span>
+<span class="fc" id="L37">                Location loc_void = new Location(34, 12, &quot;fr/ensimag/deca/context/VoidType.java&quot;);</span>
+<span class="fc" id="L38">                Definition def_void = new TypeDefinition(type_void, loc_void);</span>
+<span class="fc" id="L39">                this.declare(voidsymb, def_void);</span>
+
+<span class="fc" id="L41">                Symbol intsymb = this.createSymbol(&quot;int&quot;);</span>
+<span class="fc" id="L42">                Type type_int = new IntType(intsymb);</span>
+<span class="fc" id="L43">                Location loc_int = new Location(40, 12, &quot;fr/ensimag/deca/context/IntType.java&quot;);</span>
+<span class="fc" id="L44">                Definition def_int = new TypeDefinition(type_int, loc_int);</span>
+<span class="fc" id="L45">                this.declare(intsymb, def_int);</span>
+
+<span class="fc" id="L47">                Symbol floatsymb = this.createSymbol(&quot;float&quot;);</span>
+<span class="fc" id="L48">                Type type_float = new FloatType(floatsymb);</span>
+<span class="fc" id="L49">                Location loc_float = new Location(46, 12, &quot;fr/ensimag/deca/context/FloatType.java&quot;);</span>
+<span class="fc" id="L50">                Definition def_float = new TypeDefinition(type_float, loc_float);</span>
+<span class="fc" id="L51">                this.declare(floatsymb, def_float);</span>
+
+<span class="fc" id="L53">                Symbol booleansymb = this.createSymbol(&quot;boolean&quot;);</span>
+<span class="fc" id="L54">                Type type_boolean = new BooleanType(booleansymb);</span>
+<span class="fc" id="L55">                Location loc_boolean = new Location(52, 12, &quot;fr/ensimag/deca/context/BooleanType.java&quot;);</span>
+<span class="fc" id="L56">                Definition boolean_float = new TypeDefinition(type_boolean, loc_boolean);</span>
+<span class="fc" id="L57">                this.declare(booleansymb, boolean_float);</span>
+
+<span class="fc" id="L59">                Symbol objectsymb = this.createSymbol(&quot;Object&quot;);</span>
+<span class="fc" id="L60">                Type type_object = new ClassType(objectsymb);</span>
+<span class="fc" id="L61">                Location loc_object = new Location(58, 12, &quot;fr/ensimag/deca/context/EnvironmentType.java&quot;);</span>
+<span class="fc" id="L62">                Definition def_object = new ClassDefinition((ClassType)type_object, loc_object, null);</span>
+                //declaration de la méthode equals de object
+<span class="fc" id="L64">                EnvironmentExp env_object = ((ClassDefinition)def_object).getMembers();</span>
+<span class="fc" id="L65">                Symbol equals  = this.createSymbol(&quot;equals&quot;);</span>
+<span class="fc" id="L66">                Location loc_equals = new Location(62, 12, &quot;fr/ensimag/deca/context/EnvironmentType.java&quot;);</span>
+<span class="fc" id="L67">                Signature signature_equals = new Signature();</span>
+<span class="fc" id="L68">                signature_equals.add(type_object);</span>
+<span class="fc" id="L69">                Definition equals_def = new MethodDefinition(type_boolean, loc_equals, signature_equals,0);</span>
+<span class="fc" id="L70">                env_object.declare(equals, equals_def);</span>
+<span class="fc" id="L71">                this.declare(objectsymb, def_object);</span>
+
+<span class="fc" id="L73">                this.parentEnvironment = null;</span>
+<span class="nc" id="L74">            }catch(EnvironmentExp.DoubleDefException d){</span>
+<span class="nc" id="L75">                System.out.println(&quot;Ç marche pas &quot;);</span>
+<span class="fc" id="L76">            }</span>
+<span class="fc" id="L77">        }</span>
+    
+        /*public static class DoubleDefException extends Exception {
+            private static final long serialVersionUID = -2733379901827316441L;
+        }*/
+    
+        /**
+         * Return the definition of the symbol in the environment, or null if the
+         * symbol is undefined.
+         */
+        @Override
+        public Definition get(Symbol key) {
+<span class="fc" id="L89">            int i = 0;</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            for (Symbol s : this.symbol){</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">                if (s.equals(key)){</span>
+<span class="fc" id="L92">                    return expdef.get(i);</span>
+                }
+<span class="fc" id="L94">                i++;</span>
+<span class="fc" id="L95">            }</span>
+<span class="fc" id="L96">            return null;</span>
+            //throw new UnsupportedOperationException(&quot;not yet implemented&quot;); // erreur à completer
+        }
+        
+        @Override
+        public void declare(Symbol name, Definition def)throws DoubleDefException { //nepas oublier de decommenter cette erreur
+            
+<span class="fc" id="L103">            Definition def_null = this.get(name);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            if(def_null == null){</span>
+<span class="fc" id="L105">                this.expdef.add(def);</span>
+<span class="fc" id="L106">                this.symbol.add(name);</span>
+            }
+            else{
+<span class="fc" id="L109">                throw new DoubleDefException();</span>
+            }
+            //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);// erreur à completer
+            // il faudrait aussi ajouter l'erreur ou on definirait 2 fois un meme symbol pour 2 expressions différentes
+<span class="fc" id="L113">        }</span>
+    
+    }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

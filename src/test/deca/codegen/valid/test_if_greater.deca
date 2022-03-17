@@ -1,0 +1,19 @@
+// Description:
+//    test la suite de Fibonacci
+//
+// Resultat:
+//	    oui c'est bon
+// 
+// Historique:
+//    cree le 17/01/2022
+
+
+{
+    if (10 > 10) {
+        println("heuuu non");
+    }
+    else {
+        println("oui c'est bon");
+    }
+}
+

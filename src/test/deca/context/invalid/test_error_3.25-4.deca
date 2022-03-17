@@ -1,0 +1,14 @@
+// Description:
+//    Programme soulevant l'erreur (3.25)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : Expression booléenne attendue (règle 3.25)
+//
+// Historique:
+//    cree le 12/01/2022
+
+{
+   while("a") {
+   }
+}

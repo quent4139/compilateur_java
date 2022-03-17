@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnvironmentExp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.context</a> &gt; <span class="el_source">EnvironmentExp.java</span></div><h1>EnvironmentExp.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.context;
+import java.util.LinkedList;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.tools.SymbolTable;
+
+/**
+ * Dictionary associating identifier's ExpDefinition to their names.
+ * 
+ * This is actually a linked list of dictionaries: each EnvironmentExp has a
+ * pointer to a parentEnvironment, corresponding to superblock (eg superclass).
+ * 
+ * The dictionary at the head of this list thus corresponds to the &quot;current&quot; 
+ * block (eg class).
+ * 
+ * Searching a definition (through method get) is done in the &quot;current&quot; 
+ * dictionary and in the parentEnvironment if it fails. 
+ * 
+ * Insertion (through method declare) is always done in the &quot;current&quot; dictionary.
+ * 
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class EnvironmentExp extends Environment{
+    // A FAIRE : implémenter la structure de donnée représentant un
+    // environnement (association nom -&gt; définition, avec possibilité
+    // d'empilement).
+    
+<span class="fc" id="L28">    public EnvironmentExp(Environment parentEnvironment) {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if(parentEnvironment == null){</span>
+<span class="fc" id="L30">            this.parentEnvironment = parentEnvironment;</span>
+<span class="fc" id="L31">            this.expdef = new LinkedList&lt;Definition&gt;();</span>
+<span class="fc" id="L32">            this.symbol = new LinkedList&lt;Symbol&gt;();</span>
+        }
+        else{
+<span class="fc" id="L35">            this.parentEnvironment = parentEnvironment;</span>
+<span class="fc" id="L36">            this.expdef = new LinkedList&lt;Definition&gt;();</span>
+<span class="fc" id="L37">            this.symbol = new LinkedList&lt;Symbol&gt;();</span>
+<span class="fc" id="L38">            this.symtab = parentEnvironment.symtab;</span>
+        }
+<span class="fc" id="L40">    }</span>
+
+<span class="fc" id="L42">    public EnvironmentExp(){</span>
+<span class="fc" id="L43">        this.expdef = new LinkedList&lt;Definition&gt;();</span>
+<span class="fc" id="L44">        this.symbol = new LinkedList&lt;Symbol&gt;();</span>
+<span class="fc" id="L45">        this.parentEnvironment = null;</span>
+<span class="fc" id="L46">    }</span>
+
+<span class="fc" id="L48">    public static class DoubleDefException extends Exception {</span>
+        private static final long serialVersionUID = -2733379901827316441L;
+    }
+
+    /**
+     * Return the definition of the symbol in the environment, or null if the
+     * symbol is undefined.
+     */
+    @Override
+    public Definition get(Symbol key) {
+<span class="fc" id="L58">        int i = 0;</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (Symbol s : this.symbol){</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (s.equals(key)){</span>
+<span class="fc" id="L61">                return expdef.get(i);</span>
+            }
+<span class="fc" id="L63">            i++;</span>
+<span class="fc" id="L64">        }</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (this.parentEnvironment != null){</span>
+<span class="fc" id="L66">            return this.parentEnvironment.get(key);</span>
+        }
+<span class="fc" id="L68">        return null;</span>
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;); // erreur à completer
+    }
+
+    @Override
+    public FieldDefinition getFieldDefinition(Symbol key){
+<span class="fc" id="L74">        int i = 0;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Symbol s : this.symbol){</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (s.equals(key)){</span>
+<span class="fc" id="L77">                Definition def = expdef.get(i);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">                if(def.isField()){</span>
+<span class="fc" id="L79">                    return (FieldDefinition)def;</span>
+                }
+            }
+<span class="fc" id="L82">            i++;</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (this.parentEnvironment != null){</span>
+<span class="fc" id="L85">            return this.parentEnvironment.getFieldDefinition(key);</span>
+        }
+<span class="fc" id="L87">        return null;</span>
+    }
+
+    /**
+     * Add the definition def associated to the symbol name in the environment.
+     * 
+     * Adding a symbol which is already defined in the environment,
+     * - throws DoubleDefException if the symbol is in the &quot;current&quot; dictionary 
+     * - or, hides the previous declaration otherwise.
+     * 
+     * @param name
+     *            Name of the symbol to define
+     * @param def
+     *            Definition of the symbol
+     * @throws DoubleDefException
+     *             if the symbol is already defined at the &quot;current&quot; dictionary
+     *
+     */
+    @Override
+    public void declare(Symbol name, Definition def)throws DoubleDefException { //nepas oublier de decommenter cette erreur
+
+<span class="fc" id="L108">            Definition def_null = this.get(name);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if(def_null == null){</span>
+<span class="fc" id="L110">                this.expdef.add(def);</span>
+<span class="fc" id="L111">                this.symbol.add(name);</span>
+            }
+            else{
+<span class="fc" id="L114">                throw new DoubleDefException();</span>
+            }
+        
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);// erreur à completer
+        // il faudrait aussi ajouter l'erreur ou on definirait 2 fois un meme symbol pour 2 expressions différentes
+<span class="fc" id="L119">    }</span>
+
+    public void addEnvExp(EnvironmentExp env_exp) throws DoubleDefException{
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for(Symbol s : env_exp.symbol){</span>
+<span class="fc" id="L123">            Definition def = env_exp.get(s);</span>
+<span class="fc" id="L124">            this.declare(s, def);</span>
+<span class="fc" id="L125">        }</span>
+<span class="fc" id="L126">    }</span>
+
+    public void setParentEnvironment(Environment env){
+<span class="fc" id="L129">        this.parentEnvironment = env;</span>
+<span class="fc" id="L130">    }</span>
+     public int getNumberField(){
+<span class="fc" id="L132">         int d = 0;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">         for(Definition def : this.expdef){</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            if(def.isField()){</span>
+<span class="fc" id="L135">                d++;</span>
+            }
+<span class="fc" id="L137">         }</span>
+<span class="fc" id="L138">         return d;</span>
+     }
+    public void printEnv(){
+<span class="nc" id="L141">        System.out.println(&quot;Environnement:&quot;);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        for(Symbol s: this.symbol){</span>
+<span class="nc" id="L143">            System.out.println(s.getName());</span>
+<span class="nc" id="L144">        }</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if(this.parentEnvironment != null){</span>
+<span class="nc" id="L146">            System.out.println(&quot;- Environnement parent&quot;);</span>
+<span class="nc" id="L147">            ((EnvironmentExp)(this.parentEnvironment)).printEnv();</span>
+        }
+<span class="nc" id="L149">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

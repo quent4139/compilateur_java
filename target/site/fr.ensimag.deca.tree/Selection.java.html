@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Selection.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">Selection.java</span></div><h1>Selection.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.VariableDefinition;
+import fr.ensimag.deca.context.FieldDefinition;
+import fr.ensimag.deca.context.TypeDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import java.io.PrintStream;
+import org.apache.commons.lang.Validate;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.deca.context.Definition;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+import fr.ensimag.ima.pseudocode.instructions.LOAD;
+import fr.ensimag.ima.pseudocode.ImmediateFloat;
+import fr.ensimag.ima.pseudocode.instructions.WFLOAT;
+import fr.ensimag.ima.pseudocode.DAddr;
+import fr.ensimag.deca.context.ClassDefinition;
+
+public class Selection extends AbstractLValue {
+
+    private AbstractExpr selectExpr;
+    private AbstractIdentifier fieldName;
+
+<span class="fc" id="L30">    public Selection(AbstractExpr selectExpr, AbstractIdentifier fieldName){</span>
+<span class="fc" id="L31">        Validate.notNull(selectExpr);</span>
+<span class="fc" id="L32">        Validate.notNull(fieldName);</span>
+<span class="fc" id="L33">        this.selectExpr = selectExpr;</span>
+<span class="fc" id="L34">        this.fieldName = fieldName;</span>
+<span class="fc" id="L35">    }</span>
+
+    @Override
+    public Type verifyExpr(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass) throws ContextualError {
+<span class="fc" id="L40">        Type t2 = selectExpr.verifyExpr(compiler, localEnv, currentClass);</span>
+<span class="fc" id="L41">        this.selectExpr.setType(t2);</span>
+<span class="fc" id="L42">        Definition envDef = compiler.getEnvironmentType().get(t2.getName());</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (t2 == null) {</span>
+<span class="nc" id="L44">            throw new ContextualError(&quot;pas une classe fournie en entrée&quot;, this.getLocation());</span>
+        }
+<span class="fc" id="L46">        Type envType = envDef.getType();</span>
+        //FieldDefinition class_field = fieldName.getFieldDefinition();
+<span class="fc" id="L48">        FieldDefinition class_field = localEnv.getFieldDefinition(fieldName.getName());</span>
+<span class="fc" id="L49">        fieldName.setDefinition(class_field);</span>
+<span class="fc" id="L50">        Visibility vis = class_field.getVisibility();</span>
+<span class="fc" id="L51">        Type t = class_field.getType();</span>
+<span class="fc" id="L52">        ClassDefinition class_def = class_field.getContainingClass();</span>
+        /*if (!class_def.getType().isSubClassOf(currentClass.getType()) &amp;&amp; vis==Visibility.PROTECTED) {
+            throw new ContextualError(&quot;un attribut protégé ne peut-être appelé hors de sa classe&quot;, this.getLocation());
+        }*/ //à décommenter quand sametype et subclass prete
+<span class="fc" id="L56">        setType(t);</span>
+<span class="fc" id="L57">        return t;</span>
+    }
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L62">        s.print(' ');</span>
+<span class="fc" id="L63">    }</span>
+
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if(selectExpr!=null){</span>
+<span class="fc" id="L68">        selectExpr.prettyPrint(s, prefix, false);</span>
+        }
+<span class="fc" id="L70">        fieldName.prettyPrint(s, prefix, true);</span>
+
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    protected void iterChildren(TreeFunction f) {
+        //throw new UnsupportedOperationException(&quot;Not yet supported&quot;);
+<span class="fc" id="L77">        selectExpr.iter(f);</span>
+<span class="fc" id="L78">        fieldName.iter(f);</span>
+<span class="fc" id="L79">    }</span>
+
+    @Override
+    public boolean isSelection(){
+<span class="fc" id="L83">        return true;</span>
+    }
+
+    public AbstractExpr getSelectExpr(){
+<span class="fc" id="L87">        return this.selectExpr;</span>
+    }
+    public AbstractIdentifier getFieldName(){
+<span class="fc" id="L90">        return this.fieldName;</span>
+    }
+    @Override
+    protected void codeGenInst(DecacCompiler compiler) {
+<span class="nc" id="L94">        GPRegister r2 = Main.rmanager.getR2();</span>
+<span class="nc" id="L95">        this.selectExpr.codeGenInst(compiler);</span>
+        //rajouter verification déreférencement null
+<span class="nc" id="L97">        int offset = this.fieldName.getFieldDefinition().getIndex() + 1;//pas sur pour le +1</span>
+<span class="nc" id="L98">        RegisterOffset select = new RegisterOffset(offset, r2);</span>
+<span class="nc" id="L99">        compiler.addInstruction(new LOAD(select, r2));</span>
+<span class="nc" id="L100">    }</span>
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

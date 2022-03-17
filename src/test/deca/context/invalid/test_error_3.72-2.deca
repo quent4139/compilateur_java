@@ -1,0 +1,17 @@
+// Description:
+//    Soulève l'erreur (3.71)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : Identificateur de méthode attendu (règle 3.71)
+//
+// Historique:
+//      cree le 06/01/2022
+
+class A {}
+
+{
+	A a = new A();
+    int b;
+    b = a.m();
+}

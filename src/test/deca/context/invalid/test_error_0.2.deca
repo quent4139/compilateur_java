@@ -1,0 +1,13 @@
+// Description:
+//    Soulève l'erreur (0.2)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : Identifier 'String' non déclaré (règle 0.2)
+//
+// Historique:
+//      cree le 06/01/2022
+
+{
+	String  s;
+}

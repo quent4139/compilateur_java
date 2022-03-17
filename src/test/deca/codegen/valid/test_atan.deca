@@ -1,0 +1,25 @@
+// Description:
+//      test atan de la bibliothèque Math 
+//
+// Resultats:
+//      atan(0.0) = 1.0
+//      atan(1.87) = 1.08 //approximativement
+//		atan(4.12) = 1.33 //approximativement
+//		atan(200.0) = 1.57 //approximativement 
+//      atan(2.0e18) = 1.5707964 //approximativement
+//
+// Historique:
+//      cree le 17/01/2022
+
+#include "Math.decah"
+{
+    Math m;
+    m = new Math();
+    println("atan(0.0) =", m.atan(0.0));
+    println("atan(1.87) =", m.atan(1.87));
+    println("atan(4.12) =", m.atan(4.12));
+    println("atan(200.0) =", m.atan(200.0));
+    println("atan(2.0e18) =", m.atan(2.0e18));
+
+}
+

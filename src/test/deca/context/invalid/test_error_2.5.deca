@@ -1,0 +1,16 @@
+// Description:
+//    Soulève l'erreur (2.5)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 14 : Identifier portant le même nom dans la classe 'A' (2.5)
+//
+// Historique:
+//      cree le 19/01/2022
+
+
+class A {
+    int i = 49;
+    int i = 3;
+}
+

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeclVar.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">DeclVar.java</span></div><h1>DeclVar.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.context.VariableDefinition;
+import fr.ensimag.deca.context.EnvironmentExp.DoubleDefException;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import java.io.PrintStream;
+import org.apache.commons.lang.Validate;
+import fr.ensimag.deca.tree.Identifier;
+import fr.ensimag.deca.tools.SymbolTable.Symbol;
+import fr.ensimag.ima.pseudocode.GPRegister;
+import fr.ensimag.ima.pseudocode.Register;
+import fr.ensimag.ima.pseudocode.instructions.STORE;
+import fr.ensimag.ima.pseudocode.DAddr;
+import fr.ensimag.ima.pseudocode.RegisterOffset;
+
+import org.apache.log4j.Logger;
+
+/**
+ * @author gl37
+ * @date 01/01/2022
+ */
+public class DeclVar extends AbstractDeclVar {
+
+<span class="fc" id="L29">    private static final Logger LOG = Logger.getLogger(DeclVar.class);</span>
+
+    final private AbstractIdentifier type;
+    final private AbstractIdentifier varName;
+    final private AbstractInitialization initialization;
+
+<span class="fc" id="L35">    public DeclVar(AbstractIdentifier type, AbstractIdentifier varName, AbstractInitialization initialization) {</span>
+<span class="fc" id="L36">        Validate.notNull(type);</span>
+<span class="fc" id="L37">        Validate.notNull(varName);</span>
+<span class="fc" id="L38">        Validate.notNull(initialization);</span>
+<span class="fc" id="L39">        this.type = type;</span>
+<span class="fc" id="L40">        this.varName = varName;</span>
+<span class="fc" id="L41">        this.initialization = initialization;</span>
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    protected void verifyDeclVar(DecacCompiler compiler,
+            EnvironmentExp localEnv, ClassDefinition currentClass)
+            throws ContextualError {
+<span class="fc" id="L48">        LOG.debug(&quot;verify DeclVar: start&quot;);</span>
+        /*assert(! (type.getType().isVoid()));
+        Symbol var_symb = localEnv.createSymbol(varName);
+        Type type_var = type.getType();
+        Location location = new Location(0, 0, &quot;jsp.à.completer&quot;);
+        VariableDefinition var_def = new VariableDefinition(type_var, location);
+        localEnv.declare(var_symb, var_def); //pas sur de ça, car ce n'est pas une variable globale*/
+<span class="fc" id="L55">        Type t = type.verifyType(compiler);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if(t.isVoid()){</span>
+<span class="fc" id="L57">            throw new ContextualError(&quot;Erreur : impossible d'instancier un void&quot;, this.getLocation());</span>
+        }
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        else if(t.isString()){</span>
+<span class="nc" id="L60">            throw new ContextualError(&quot;Erreur contextuelle : impossible d'instancier un string&quot;, this.getLocation());//à modifier peut etre plus tard</span>
+        }
+        else{
+            try{
+<span class="fc" id="L64">                Symbol var_symbol = varName.getName();</span>
+<span class="fc" id="L65">                initialization.verifyInitialization(compiler, t, localEnv, currentClass);</span>
+<span class="fc" id="L66">                Location location = this.getLocation();</span>
+<span class="fc" id="L67">                VariableDefinition var_def = new VariableDefinition(t, location);</span>
+<span class="fc" id="L68">                this.varName.setDefinition(var_def);</span>
+<span class="fc" id="L69">                localEnv.declare(var_symbol, var_def);//pas sur que ça fasse ce que je veux, pas sur que ce soit globale</span>
+            }
+<span class="fc" id="L71">            catch(DoubleDefException dd){</span>
+<span class="fc" id="L72">                throw new ContextualError(&quot;Erreur contextuelle : définition multiple de la variable &quot;+varName.getName(), this.getLocation());</span>
+<span class="fc" id="L73">            }</span>
+            
+        }
+<span class="fc" id="L76">        LOG.debug(&quot;verify DeclVar: end&quot;);</span>
+<span class="fc" id="L77">    }</span>
+
+    @Override
+    public void codeDeclVar(DecacCompiler compiler, boolean inMethod){
+<span class="fc" id="L81">        LOG.debug(&quot;code declvar of &quot; + this.varName.getName().getName() + &quot;:begin&quot;);</span>
+<span class="fc" id="L82">        VariableDefinition var_def = this.varName.getVariableDefinition();</span>
+<span class="fc" id="L83">        initialization.codeGenInitialization(compiler, var_def, inMethod);</span>
+<span class="fc" id="L84">        LOG.debug(&quot;code declvar of &quot; + this.varName.getName().getName() + &quot;:end&quot;);</span>
+        //num = num+3;// car  on ne touchera pass à 1(GB) et 2(GB)
+        //var_def.setNumstack(num); // on définit le numéro dans la pile de la variable
+<span class="fc" id="L87">    }</span>
+    
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L91">        type.decompile(s);</span>
+<span class="fc" id="L92">        s.print(' ');</span>
+<span class="fc" id="L93">        varName.decompile(s);</span>
+<span class="fc" id="L94">        initialization.decompile(s);</span>
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    protected
+    void iterChildren(TreeFunction f) {
+<span class="fc" id="L100">        type.iter(f);</span>
+<span class="fc" id="L101">        varName.iter(f);</span>
+<span class="fc" id="L102">        initialization.iter(f);</span>
+<span class="fc" id="L103">    }</span>
+    
+    @Override
+    protected void prettyPrintChildren(PrintStream s, String prefix) {
+<span class="fc" id="L107">        type.prettyPrint(s, prefix, false);</span>
+<span class="fc" id="L108">        varName.prettyPrint(s, prefix, false);</span>
+<span class="fc" id="L109">        initialization.prettyPrint(s, prefix, true);</span>
+<span class="fc" id="L110">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

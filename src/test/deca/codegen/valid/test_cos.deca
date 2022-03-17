@@ -1,0 +1,25 @@
+// Description:
+//      test cos de la bibliothèque Math 
+//
+// Resultats:
+//      cos(0.0) = 1.0
+//      cos(1.22) = 1.0
+//		cos(3.14) = -1.0
+//		cos(200.0) = 0.48719768 //approximativement 
+//      cos(100.0pi) = 1.0
+//
+// Historique:
+//      cree le 17/01/2022
+
+#include "Math.decah"
+{
+    Math m;
+    m = new Math();
+    println("cos(0.0) =", m.cos(0.0));
+    println("cos(1.22) =", m.cos(1.87));
+    println("cos(3.14) =", m.cos(3.14));
+    println("cos(200.0) =", m.cos(200.0));
+    println("cos(100.0pi) =", m.cos(100.0 * m._pi));
+}
+
+

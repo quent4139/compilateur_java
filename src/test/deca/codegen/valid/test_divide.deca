@@ -1,0 +1,15 @@
+// Description:
+//      test l'utilisation des registres
+//
+// Resultats:
+//      20
+//
+// Historique:
+//      cree le 17/01/2022
+
+{
+    int a = 200;
+    a = a / 10;
+    println(a);
+}
+

@@ -1,0 +1,12 @@
+// Description:
+//    Programme minimaliste utilisant println pour afficher un int.
+//
+// Resultats:
+//    Affichage de l'integer 42.
+//
+// Historique:
+//    cree le 10/01/2022
+
+{
+	println(42);
+}

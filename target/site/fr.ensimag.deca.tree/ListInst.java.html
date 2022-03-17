@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListInst.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">ListInst.java</span></div><h1>ListInst.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+
+import java.util.Iterator;
+
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+import fr.ensimag.ima.pseudocode.Label;
+
+import org.apache.log4j.Logger;
+
+/**
+ * 
+ * @author gl37
+ * @date 01/01/2022
+ */
+<span class="fc" id="L21">public class ListInst extends TreeList&lt;AbstractInst&gt; {</span>
+
+<span class="fc" id="L23">    private static final Logger LOG = Logger.getLogger(ListInst.class);</span>
+
+    /**
+     * Implements non-terminal &quot;list_inst&quot; of [SyntaxeContextuelle] in pass 3
+     * @param compiler contains &quot;env_types&quot; attribute
+     * @param localEnv corresponds to &quot;env_exp&quot; attribute
+     * @param currentClass 
+     *          corresponds to &quot;class&quot; attribute (null in the main bloc).
+     * @param returnType
+     *          corresponds to &quot;return&quot; attribute (void in the main bloc).
+     */    
+    public void verifyListInst(DecacCompiler compiler, EnvironmentExp localEnv,
+            ClassDefinition currentClass, Type returnType)
+            throws ContextualError {
+<span class="fc" id="L37">        LOG.debug(&quot;Verify ListInst: start&quot;);</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (getList() == null) {</span>
+<span class="nc" id="L39">            throw new ContextualError(&quot;Erreur contextuelle à&quot; + compiler.getSource().getAbsolutePath() + &quot;:&quot; +</span>
+<span class="nc" id="L40">                    this.getLocation().getLine() + &quot;: liste indéfini&quot;, this.getLocation());</span>
+        }
+<span class="fc" id="L42">        Iterator&lt;AbstractInst&gt; iter = this.iterator();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        while(iter.hasNext()){</span>
+<span class="fc" id="L44">            AbstractInst e = iter.next();</span>
+<span class="fc" id="L45">            e.verifyInst(compiler, localEnv, currentClass, returnType);</span>
+<span class="fc" id="L46">        }</span>
+<span class="fc" id="L47">        LOG.debug(&quot;verify ListInst: end&quot;);</span>
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;); erreur à completerS
+<span class="fc" id="L49">    }</span>
+
+    public void codeGenListInst(DecacCompiler compiler) {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (AbstractInst i : getList()) {</span>
+<span class="fc" id="L53">            i.codeGenInst(compiler);</span>
+<span class="fc" id="L54">        }</span>
+<span class="fc" id="L55">    }</span>
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (AbstractInst i : getList()) {</span>
+<span class="fc" id="L60">            i.decompileInst(s);</span>
+<span class="fc" id="L61">            s.println();</span>
+<span class="fc" id="L62">        }</span>
+<span class="fc" id="L63">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListExpr.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.tree</a> &gt; <span class="el_source">ListExpr.java</span></div><h1>ListExpr.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.tree;
+
+import fr.ensimag.deca.context.Type;
+import fr.ensimag.deca.DecacCompiler;
+import fr.ensimag.deca.context.ClassDefinition;
+import fr.ensimag.deca.context.ContextualError;
+import fr.ensimag.deca.context.EnvironmentExp;
+import fr.ensimag.deca.tools.IndentPrintStream;
+
+/**
+ * List of expressions (eg list of parameters).
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+<span class="fc" id="L16">public class ListExpr extends TreeList&lt;AbstractExpr&gt; {</span>
+
+
+    @Override
+    public void decompile(IndentPrintStream s) {
+<span class="fc" id="L21">        int cpt = 1;</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        for(AbstractExpr expr: getList()) {</span>
+<span class="fc" id="L23">            expr.decompileInst(s);</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">            s.print(cpt&lt;size() ? &quot;, &quot;: &quot;&quot;);</span>
+<span class="fc" id="L25">            cpt++;</span>
+<span class="fc" id="L26">        }</span>
+<span class="fc" id="L27">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

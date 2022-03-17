@@ -1,0 +1,23 @@
+// Description:
+// test les opérations basiques
+//
+// Resultats :
+// Tout fonctionne bien
+//
+// Historique:
+// cree le 17/01/2022
+
+{
+	int a = 1;
+    int b = 2;
+    float c = 1.4;
+    float d = 2.5;
+    int e;
+	println(a + b);
+	println(c - d);
+	println(a * b);
+	println(c * d);
+	println(a / b);
+	println(c / d);
+	println(b % a);
+}

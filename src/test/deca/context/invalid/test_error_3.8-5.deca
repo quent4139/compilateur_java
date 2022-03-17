@@ -1,0 +1,12 @@
+// Description:
+//    Programme soulevant l'erreur (3.8)
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 10 : Les types "float" et "int" sont incompatibles pour l'affectation (règle 3.8)
+//
+// Historique:
+//    cree le 12/01/2022
+
+{
+	float x = 1;
+}

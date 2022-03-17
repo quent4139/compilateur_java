@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListMethodTable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca.codegen</a> &gt; <span class="el_source">ListMethodTable.java</span></div><h1>ListMethodTable.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca.codegen;
+
+import java.util.ArrayList;
+
+import fr.ensimag.deca.codegen.MethodTable;
+import fr.ensimag.deca.context.ClassDefinition;
+
+public class ListMethodTable{
+    
+    private ArrayList&lt;MethodTable&gt; listMethodTable;
+
+<span class="fc" id="L12">    public ListMethodTable(){</span>
+<span class="fc" id="L13">        listMethodTable = new ArrayList&lt;MethodTable&gt;();</span>
+<span class="fc" id="L14">    }</span>
+
+    public ArrayList&lt;MethodTable&gt; getlistMethodTable(){
+<span class="fc" id="L17">        return this.listMethodTable;</span>
+    }
+
+    public void addMethodTable(MethodTable mtable){
+<span class="fc" id="L21">        this.listMethodTable.add(mtable);</span>
+<span class="fc" id="L22">    }</span>
+
+    public MethodTable getMethodTable(ClassDefinition class_def){
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        for(MethodTable m : this.listMethodTable){</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            if(m.getClassDefinition().equals(class_def)){</span>
+<span class="fc" id="L27">                return m;</span>
+            }
+<span class="fc" id="L29">        }</span>
+<span class="nc" id="L30">        return null;</span>
+    }
+
+    public int getLength(){
+<span class="fc" id="L34">        int i = 0;</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        for(MethodTable vtable : listMethodTable){</span>
+<span class="fc" id="L36">            int j = vtable.getLength();</span>
+<span class="fc" id="L37">            i = i+j;</span>
+<span class="fc" id="L38">            i = i + 1;</span>
+<span class="fc" id="L39">        }</span>
+<span class="fc" id="L40">        return i;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

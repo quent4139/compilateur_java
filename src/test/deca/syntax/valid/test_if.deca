@@ -1,0 +1,15 @@
+// Description:
+//    Premier test de la condition if
+//
+// Resultats:
+//    ca marche, la condition est vraie
+//
+// Historique:
+//    cree le 10/01/2022
+
+{
+    if (true) {
+        println("ca marche, la condition est vraie");
+    }
+}
+

@@ -1,0 +1,20 @@
+// Description:
+//    Soulève l'erreur (3.72)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 19 : Nombre de paramètres incorrect (règle 3.72)
+//
+// Historique:
+//      cree le 06/01/2022
+
+class A{
+    void m(int i){
+    }
+}
+
+{
+	int b;
+    A a;
+    b = a.m(1, 4949.2);
+}

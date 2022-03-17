@@ -1,0 +1,13 @@
+// Description:
+//      Test la division par zero
+//
+// Resultat:
+//      Ligne 12 : error - division par zero impossible  
+// 
+// Historique:
+//    cree le 20/01/2022
+
+{
+    int res = 87 % 0;
+}
+

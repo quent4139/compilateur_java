@@ -1,0 +1,14 @@
+// Description:
+//    test sur asm et string multiples.
+//
+// Resultats: rien
+//
+//
+// Historique:
+//    crée le 20/01/2022
+
+class A {
+
+	void X () asm("du code assembleur? \n
+		pas vraiment");
+}

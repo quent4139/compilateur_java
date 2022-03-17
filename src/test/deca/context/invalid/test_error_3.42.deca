@@ -1,0 +1,17 @@
+// Description:
+//    Soulève l'erreur liée à (3.42) : le new
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : Identificateur de classe attendu (règle 3.42)
+//
+// Historique:
+//      cree le 23/01/2022
+
+{
+    int a;
+    a = new int();
+
+}
+
+

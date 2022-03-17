@@ -1,0 +1,10 @@
+// Description:
+//    tests des chaines de caracteres.
+//
+// Resultats:
+//    Ligne 10 : Erreur lexical
+//
+// Historique:
+//    crée le 11/01/2022
+
+" a \n\t"

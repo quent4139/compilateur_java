@@ -1,0 +1,13 @@
+// Description:
+//    test sur le dépassement sur la lecture de l'entier
+//
+// Resultats: 
+// Erreur ligne 10 : dépassement de capacité
+//
+// Historique:
+//    crée le 11/01/2022
+
+{
+	int A =  2168594759;
+	println("hummmm");
+}

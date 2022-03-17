@@ -1,0 +1,36 @@
+; start main program
+; Code gen init table
+	ADDSP #4
+; Début génération de la table des méthodes
+; Code de la table des méthodes de Object
+	LOAD #null, R0
+	STORE R0, 1(GB)
+	LOAD code.Object.equals, R0
+	STORE R0, 2(GB)
+; Fin génération de la table des méthodes
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+	ADDSP #0
+; Beginning of instructions:
+	LOAD #1, R2
+	LOAD R2, R3
+	LOAD #0, R2
+	CMP R2, R3
+	SGE R2
+	CMP #1, R2
+	BEQ then_label1
+	BRA else_label1
+then_label1:
+	WSTR "ok"
+	WNL
+	BRA end_if1
+else_label1:
+	WSTR "erreur"
+	WNL
+	BRA end_if1
+end_if1:
+	HALT
+; ------------Initialisation des classes-----------------
+; -------------Codage des méthodes------------------------
+; end main program

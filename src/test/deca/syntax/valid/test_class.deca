@@ -1,0 +1,29 @@
+// Description:
+//    test sur les classes et de ses noeuds possibles
+//
+// Resultats: Creation de la classe A et B
+//
+//
+// Historique:
+//    crée le 10/01/2022
+
+
+class A {
+   int x;
+   int getX() {
+      return x;
+   }
+}
+
+class B extends A {
+   int y,z;
+}   
+
+{
+	A a = new A();
+	B b = new B();
+
+   a = null;
+}
+
+

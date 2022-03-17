@@ -1,0 +1,14 @@
+// Description:
+//      Test le readFloat
+//
+// Resultats:
+//      affiche le flottant pris en entrée
+// 
+// Historique:
+//    cree le 18/01/2022
+
+{
+    println("Veuillez entrer un float :");
+    float x = readFloat();
+    print(x);
+}

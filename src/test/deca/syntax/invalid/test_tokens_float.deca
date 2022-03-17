@@ -1,0 +1,18 @@
+// Description:
+//    tests des flottants
+//
+// Resultats:
+//    Ligne 11 : Erreur de syntaxe
+//    test_lex ne doit pas donner d'erreur
+//
+// Historique:
+//    crée le 11/01/2022
+
+01.38
+01.23E35
+01.23E+35
+01.23E-35
+01.23e35
+01.23e+35
+01.23e-35
+

@@ -1,0 +1,84 @@
+; start main program
+; Main program
+; Beginning of main instructions:
+; Beginning of variables declaration:
+	LOAD #761, R2
+	STORE R2, 4(GB)
+; Beginning of instructions:
+	WSTR "Veuillez entrer un interger :"
+	WNL
+	RINT
+	LOAD R1, R2
+	STORE R2, 3(GB)
+while1:
+	LOAD 3(GB), R2
+	LOAD R2, R3
+	LOAD 4(GB), R2
+	CMP R2, R3
+	SNE R2
+	CMP #1, R2
+	BNE end_while1
+	LOAD 3(GB), R2
+	LOAD R2, R3
+	LOAD 4(GB), R2
+	CMP R2, R3
+	SLT R2
+	CMP #1, R2
+	BEQ then_label1
+	BRA else_label1
+then_label1:
+	LOAD 3(GB), R2
+	LOAD R2, R1
+	WINT
+	WNL
+	WSTR "Le prix exact est plus haut. Réessaye :"
+	WNL
+	RINT
+	LOAD R1, R2
+	STORE R2, 3(GB)
+	BRA end_if1
+else_label1:
+	LOAD 3(GB), R2
+	LOAD R2, R3
+	LOAD 4(GB), R2
+	CMP R2, R3
+	SGT R2
+	CMP #1, R2
+	BEQ then_label2
+	BRA else_label2
+then_label2:
+	LOAD 3(GB), R2
+	LOAD R2, R1
+	WINT
+	WNL
+	WSTR "Le prix exact est plus bas. Réessaye :"
+	WNL
+	RINT
+	LOAD R1, R2
+	STORE R2, 3(GB)
+	BRA end_if2
+else_label2:
+	LOAD 3(GB), R2
+	LOAD R2, R3
+	LOAD 4(GB), R2
+	CMP R2, R3
+	SEQ R2
+	CMP #1, R2
+	BEQ then_label3
+	BRA else_label3
+then_label3:
+	WSTR "Oui gagné !"
+	WNL
+	WSTR "Le juste prix était 761"
+	BRA end_if3
+else_label3:
+	BRA end_if3
+end_if3:
+	BRA end_if2
+end_if2:
+	BRA end_if1
+end_if1:
+	BRA while1
+end_while1:
+	HALT
+; end main program

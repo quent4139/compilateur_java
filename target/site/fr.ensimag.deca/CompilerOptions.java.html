@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompilerOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Deca Compiler</a> &gt; <a href="index.source.html" class="el_package">fr.ensimag.deca</a> &gt; <span class="el_source">CompilerOptions.java</span></div><h1>CompilerOptions.java</h1><pre class="source lang-java linenums">package fr.ensimag.deca;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+/**
+ * User-specified options influencing the compilation.
+ *
+ * @author gl37
+ * @date 01/01/2022
+ */
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">public class CompilerOptions {</span>
+    public static final int QUIET = 0;
+    public static final int INFO  = 1;
+    public static final int DEBUG = 2;
+    public static final int TRACE = 3;
+    public int getDebug() {
+<span class="fc" id="L24">        return debug;</span>
+    }
+
+    public boolean getParallel() {
+<span class="fc" id="L28">        return parallel;</span>
+    }
+
+    public boolean getPrintBanner() {
+<span class="fc" id="L32">        return printBanner;</span>
+    }
+
+    public boolean getParse() {
+<span class="fc" id="L36">        return parse;</span>
+    }
+
+    public boolean getVerification() {
+<span class="fc" id="L40">        return verification;</span>
+    }
+
+    public boolean getNoCheck() {
+<span class="fc" id="L44">        return no_check;</span>
+    }
+
+    public List&lt;File&gt; getSourceFiles() {
+<span class="fc" id="L48">        return Collections.unmodifiableList(sourceFiles);</span>
+    }
+
+<span class="fc" id="L51">    private int debug = 0;</span>
+<span class="fc" id="L52">    private boolean parallel = false;</span>
+<span class="fc" id="L53">    private boolean printBanner = false;</span>
+<span class="fc" id="L54">    private boolean parse = false;</span>
+<span class="fc" id="L55">    private boolean verification = false;</span>
+<span class="fc" id="L56">    private boolean no_check = false;</span>
+<span class="fc" id="L57">    private boolean registers = false;</span>
+<span class="fc" id="L58">    private int number_of_registers = -1;</span>
+
+<span class="fc" id="L60">    private List&lt;File&gt; sourceFiles = new ArrayList&lt;File&gt;();</span>
+
+    
+    public void parseArgs(String[] args) throws CLIException {
+<span class="fc" id="L64">        int nb_options = 0;</span>
+
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        for(String argument: args) {</span>
+<span class="pc bpc" id="L67" title="3 of 8 branches missed.">            switch(argument) {</span>
+                case &quot;-b&quot; :
+                    // l'option de peut-être qu'utilisé seul, sinon on lance une fatal error car on ne peut pas
+                    // compiler
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                    if (args.length != 1) {</span>
+<span class="nc" id="L72">                        throw new IllegalArgumentException(&quot;L’option ’-b’ ne peut être utilisée que sans autre option.&quot;);</span>
+                    }
+<span class="fc" id="L74">                    printBanner = true;</span>
+<span class="fc" id="L75">                    break;</span>
+
+                case &quot;-p&quot; :
+<span class="fc" id="L78">                    parse = true;</span>
+<span class="fc" id="L79">                    nb_options++;</span>
+<span class="fc" id="L80">                    break;</span>
+
+                case &quot;-v&quot; :
+<span class="fc" id="L83">                    verification = true;</span>
+<span class="fc" id="L84">                    nb_options++;</span>
+<span class="fc" id="L85">                    break;</span>
+
+                case &quot;-n&quot; :
+<span class="nc" id="L88">                    no_check = true;</span>
+<span class="nc" id="L89">                    nb_options++;</span>
+<span class="nc" id="L90">                    break;</span>
+
+                case &quot;-r&quot; :
+<span class="nc" id="L93">                    registers = true;</span>
+<span class="nc" id="L94">                    nb_options++;</span>
+<span class="nc" id="L95">                    break;</span>
+
+                case &quot;-d&quot; :
+<span class="fc" id="L98">                    debug++;</span>
+<span class="fc" id="L99">                    break;</span>
+
+                case &quot;-P&quot; :
+<span class="nc" id="L102">                    parallel = true;</span>
+                    break;
+            }
+            // Si registers est l'argument d'avant, il est true, on récupère alors le nombre de registre
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (registers) {</span>
+                try {
+<span class="nc" id="L108">                    Integer.parseInt(argument);</span>
+<span class="nc" id="L109">                } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L110">                }</span>
+<span class="nc" id="L111">                number_of_registers = Integer.parseInt(argument);</span>
+<span class="nc bnc" id="L112" title="All 4 branches missed.">                if ( number_of_registers &lt; 4 || number_of_registers &gt; 16) {</span>
+<span class="nc" id="L113">                    throw new IllegalArgumentException(&quot;il faut qu'il y ai entre 4 et 16 registres banalisés.&quot;);</span>
+                }
+                // On repasse registrers en false pouur ne pas parser de nouveau les registres
+<span class="nc" id="L116">                registers = false;</span>
+<span class="nc" id="L117">                nb_options++;</span>
+            }
+        }
+        // Les options -p et -v ne sont pas compatibles
+<span class="pc bpc" id="L121" title="1 of 4 branches missed.">        if (parse &amp;&amp; verification) {</span>
+<span class="nc" id="L122">            throw new IllegalArgumentException(&quot;Les options -p et -v ne sont pas compatibles&quot;);</span>
+        }
+
+<span class="fc" id="L125">        Logger logger = Logger.getRootLogger();</span>
+        // map command-line debug option to log4j's level.
+<span class="pc bpc" id="L127" title="2 of 5 branches missed.">        switch (getDebug()) {</span>
+<span class="fc" id="L128">        case QUIET: break; // keep default</span>
+        case INFO:
+<span class="fc" id="L130">            logger.setLevel(Level.INFO); break;</span>
+        case DEBUG:
+<span class="nc" id="L132">            logger.setLevel(Level.DEBUG); break;</span>
+        case TRACE:
+<span class="nc" id="L134">            logger.setLevel(Level.TRACE); break;</span>
+        default:
+<span class="fc" id="L136">            logger.setLevel(Level.ALL); break;</span>
+        }
+<span class="fc" id="L138">        logger.info(&quot;Application-wide trace level set to &quot; + logger.getLevel());</span>
+
+<span class="fc" id="L140">        boolean assertsEnabled = false;</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (!no_check) {</span>
+<span class="pc bpc" id="L142" title="2 of 4 branches missed.">            assert assertsEnabled = true; // Intentional side effect!!!</span>
+        }
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if (assertsEnabled) {</span>
+<span class="fc" id="L145">            logger.info(&quot;Java assertions enabled&quot;);</span>
+        } else {
+<span class="nc" id="L147">            logger.info(&quot;Java assertions disabled&quot;);</span>
+        }
+<span class="fc" id="L149">        nb_options += getDebug();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        for (int cpt = nb_options; cpt &lt; args.length; cpt++) {</span>
+<span class="fc" id="L151">            String file_name = args[cpt];</span>
+<span class="fc" id="L152">            File file = new File(file_name);</span>
+<span class="fc" id="L153">            this.sourceFiles.add(file); // ultra-basique, ne prend qu'un programme sans parametres, à completer plus tard</span>
+        }
+
+
+        //throw new UnsupportedOperationException(&quot;not yet implemented&quot;);
+<span class="fc" id="L158">    }</span>
+
+    protected void displayUsage() {
+<span class="nc" id="L161">        throw new UnsupportedOperationException(&quot;not yet implemented&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,14 @@
+// Description:
+//    premier test de la condition while 
+//
+// Resultats:
+//    ca marche, la condition est vraie
+//
+// Historique:
+//    cree le 10/01/2022
+
+{
+        while(true) {
+	    println("ca marche, la condition est vraie");
+	}
+}

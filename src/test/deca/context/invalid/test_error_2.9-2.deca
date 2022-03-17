@@ -1,0 +1,16 @@
+// Description:
+//    Soulève l'erreur (2.9)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 12 : Un paramètre d'une méthode ne peut pas être de type "void" (règle 2.9)
+//
+// Historique:
+//      cree le 19/01/2022
+
+Class A {
+    void getX(void x){
+    }
+
+}
+

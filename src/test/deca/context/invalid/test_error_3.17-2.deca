@@ -1,0 +1,15 @@
+// Description:
+//    Soulève l'erreur (3.17)
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 13 : Le paramètre x a déjà été déclaré (règle 3.17)
+//
+// Historique:
+//      cree le 14/01/2022
+
+{
+	int x = 2;
+    int x;
+}
+

@@ -1,0 +1,16 @@
+
+// Description:
+//    Soulève l'erreur (3.39) : le cast
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : conversion de "float" en "boolean" n'est pas possible (règle 3.39)
+//
+// Historique:
+//      cree le 19/01/2022
+
+{
+    float i;
+    i = (float) (true);
+}
+

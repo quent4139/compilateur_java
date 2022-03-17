@@ -1,0 +1,20 @@
+// Description:
+//    Soulève l'erreur (3.40) : le instanceof
+//
+// Resultats:
+//    Erreur contextuelle
+//    Ligne 11 : les types "String" et "void" sont incompatibles (règle 3.40)
+//
+// Historique:
+//      cree le 06/01/2022
+
+class A {
+    void m() {
+    }
+}
+
+{   
+    boolean b;
+    b = "toto" instanceof A;
+}
+
