@@ -1,7 +1,5 @@
 # Projet compilateur langage dérivé Java.
 
-## Travail réalisé en équipe de 5 
-
 ### Compilation et option de compilation
 La compilation d’un programme deca se fait via la commande decac dans le terminal suivi du chemin vers le fichier du programme deca. Pour l’exécuter de cette manière on doit cependant avoir initialisé le PATH, soit au préalable, soit directement dans les PATH dans notre fichier .bash.rc (ou .zsh.rc selon le système unix).
 il y'a quelques différences avec le compilateur de l’énoncé, le notre permet d’imprimer des booléens notamment (true, false ou résultats d’opérations booléennes), certaines options n’ont pas pu être intégrées à temps (-n, -P, instanceof, ...).
